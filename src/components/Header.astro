@@ -1,0 +1,37 @@
+---
+// src/components/Header.astro
+---
+<header class="fixed w-full top-0 bg-white/90 backdrop-blur-md shadow-sm z-50">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      
+      <a href="/" class="flex items-center gap-2 group">
+        <img 
+          src="/logo-kinezi.png" 
+          alt="Logo Kinezi" 
+          class="h-10 w-auto group-hover:scale-105 transition-transform"
+        />
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-10">
+        <a href="#concept" class="font-nunito text-gray-700 hover:text-kinezi-violet font-semibold transition-colors">Le concept</a>
+        <a href="#equipe" class="font-nunito text-gray-700 hover:text-kinezi-violet font-semibold transition-colors">Notre équipe</a>
+        <a href="#abonnement" class="font-nunito text-gray-700 hover:text-kinezi-violet font-semibold transition-colors">Abonnement</a>
+      </nav>
+
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="/login" class="font-nunito text-kinezi-bleu font-bold hover:text-kinezi-violet transition-colors">
+          Connexion
+        </a>
+        <a href="/register" class="bg-kinezi-violet hover:bg-opacity-90 text-white px-7 py-2.5 rounded-full font-nunito font-bold shadow-md transition-transform transform hover:-translate-y-0.5">
+          S'inscrire
+        </a>
+      </div>
+
+      <button class="md:hidden text-kinezi-bleu">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+
+    </div>
+  </div>
+</header>
