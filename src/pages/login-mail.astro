@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Kinezi | Se connecter">
+  <main class="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
+    
+    <div class="mb-4 drop-shadow-[0_8px_15px_rgba(0,0,0,0.08)]">
+      <img src="/logo-kinezi-K-black.svg" alt="Logo Kinezi K" class="w-40 h-40 object-contain" />
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-10 tracking-tight">
+      Se connecter
+    </h1>
+
+    <form class="w-full max-w-md flex flex-col gap-6">
+      
+      <div class="flex flex-col gap-2">
+        <label for="email" class="text-sm font-medium text-gray-700 ml-2">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          placeholder="kinezi@gmail.com" 
+          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="password" class="text-sm font-medium text-gray-700 ml-2">Mot de passe</label>
+        <input 
+          type="password" 
+          id="password" 
+          placeholder="***********" 
+          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
+        />
+        <div class="flex justify-end pr-4 mt-1">
+          <a href="/forgot-password" class="text-xs text-[#A898EE] hover:text-[#9685db] transition-colors">
+            Mot de passe oublié
+          </a>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="mt-4 w-full bg-[#A898EE] text-white font-bold py-4 rounded-full transition-all duration-300 hover:bg-[#9685db] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(168,152,238,0.4)] active:scale-95 shadow-[0_8px_20px_rgba(168,152,238,0.3)] text-lg"
+      >
+        Se connecter
+      </button>
+
+    </form>
+
+    <div class="w-full max-w-md flex items-center gap-4 my-12">
+      <div class="h-[1px] bg-black/20 flex-1"></div>
+      <span class="text-sm font-medium text-gray-500">ou</span>
+      <div class="h-[1px] bg-black/20 flex-1"></div>
+    </div>
+
+    <div class="flex gap-8 items-center">
+      <button class="transition-all duration-300 hover:-translate-y-1 hover:scale-110 active:scale-95 drop-shadow-md hover:drop-shadow-xl">
+        <img src="/apple.png" alt="Connexion avec Apple" class="w-10 h-10 object-contain" />
+      </button>
+      <button class="transition-all duration-300 hover:-translate-y-1 hover:scale-110 active:scale-95 drop-shadow-md hover:drop-shadow-xl">
+        <img src="/google.png" alt="Connexion avec Google" class="w-10 h-10 object-contain" />
+      </button>
+    </div>
+
+    <p class="mt-8 text-sm text-gray-600">
+      Tu n'as pas de compte ? <a href="/register" class="font-bold text-[#A898EE] underline decoration-2 underline-offset-4 hover:text-[#9685db] transition-colors">Créer un compte</a>
+    </p>
+
+  </main>
+</Layout>
