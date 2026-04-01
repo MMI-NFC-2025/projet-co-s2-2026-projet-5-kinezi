@@ -8,10 +8,11 @@
 ></div>
 
 <aside 
-  id="side-menu" 
-  class="fixed top-0 left-0 w-[85%] max-w-[350px] h-full bg-[#A898EE] rounded-r-[40px] shadow-2xl z-[101] transform -translate-x-full transition-transform duration-300 flex flex-col py-12 overflow-y-auto"
->
-  <div class="flex items-center gap-6 px-8 mb-12">
+
+    id="side-menu" 
+    class="fixed top-0 left-0 w-[85%] max-w-[350px] h-full bg-[#A898EE] rounded-r-[40px] shadow-2xl z-[101] transform -translate-x-full transition-transform duration-300 flex flex-col py-12 overflow-y-auto no-scrollbar"
+    >
+    <div class="flex items-center gap-6 px-8 mb-12">
     <div class="w-20 h-20 rounded-full border-[3px] border-white flex items-center justify-center flex-shrink-0">
       <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -92,6 +93,10 @@
   const menuOverlay = document.getElementById('menu-overlay');
 
   function toggleMenu() {
+    // La ligne magique qui rassure l'éditeur de code :
+    // Si l'un des éléments manque, on arrête la fonction ici.
+    if (!sideMenu || !menuOverlay) return;
+
     // Si le menu est fermé (transformé à -100%)
     if (sideMenu.classList.contains('-translate-x-full')) {
       // On ouvre
@@ -108,13 +113,26 @@
     }
   }
 
-  // Écouteur sur le bouton du Header
+  // Écouteur sur le bouton du Header (avec vérification)
   if (menuBtn) {
     menuBtn.addEventListener('click', toggleMenu);
   }
 
-  // Écouteur sur le fond gris pour fermer le menu en cliquant à côté
+  // Écouteur sur le fond gris (avec vérification)
   if (menuOverlay) {
     menuOverlay.addEventListener('click', toggleMenu);
   }
 </script>
+
+<style>
+  /* Cacher la scrollbar pour Chrome, Safari et Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Cacher la scrollbar pour IE, Edge et Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE et Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+</style>
