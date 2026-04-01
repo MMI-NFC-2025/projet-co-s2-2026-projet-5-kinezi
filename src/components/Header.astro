@@ -3,22 +3,25 @@
 ---
 <div class="absolute w-full top-0 z-50 flex flex-col pointer-events-none">
   
-  <header class="bg-[#A898EE] h-14 flex items-center px-6 lg:px-8 z-10 relative pointer-events-auto shadow-sm">
-    <div class="max-w-7xl mx-auto w-full flex justify-between items-center relative">
+  <header class="bg-[#A898EE] h-20 flex items-center px-6 lg:px-16 z-10 relative pointer-events-auto shadow-sm">
+    <div class="max-w-[1300px] mx-auto w-full flex justify-between items-center">
       
-      <a href="/" class="group absolute left-1/2 -translate-x-1/2">
+      <a href="/" class="group flex items-center transition-transform duration-300 hover:scale-105">
         <img 
-          src="/logo-kinezi.png" 
+          src="/logo-kinezi-K.svg" 
           alt="Logo Kinezi" 
-          class="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-105" 
+          class="h-10 md:h-12 w-auto" 
         />
       </a>
       
-      <button id="menu-btn" class="text-white hover:opacity-80 transition-opacity absolute right-0 cursor-pointer pointer-events-auto z-20">
-        <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+      <button id="menu-btn" class="relative w-14 h-14 z-20 pointer-events-auto group cursor-pointer outline-none flex justify-center items-center -mr-2">
+        <div class="relative w-10 h-10 flex flex-col justify-center items-end">
+          <span class="line-1 absolute h-[3px] w-10 bg-white rounded-full transition-all duration-300 ease-in-out -translate-y-[12px] group-hover:bg-white/90"></span>
+          <span class="line-2 absolute h-[3px] w-6 bg-white rounded-full transition-all duration-300 ease-in-out right-0 group-hover:w-10 group-hover:bg-white/90"></span>
+          <span class="line-3 absolute h-[3px] w-10 bg-white rounded-full transition-all duration-300 ease-in-out translate-y-[12px] group-hover:bg-white/90"></span>
+        </div>
       </button>
+
     </div>
   </header>
 
@@ -42,3 +45,17 @@
     </svg>
   </div>
 </div>
+
+<style>
+  /* Animation pour transformer les lignes en croix (X) */
+  #menu-btn.is-active .line-1 {
+    transform: translateY(0) rotate(45deg);
+  }
+  #menu-btn.is-active .line-2 {
+    opacity: 0;
+    width: 0;
+  }
+  #menu-btn.is-active .line-3 {
+    transform: translateY(0) rotate(-45deg);
+  }
+</style>
