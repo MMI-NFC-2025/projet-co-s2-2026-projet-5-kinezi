@@ -5,7 +5,7 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Kinezi | Créer un compte">
   <main class="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
     
-    <div class="mb-4">
+    <div class="mb-4 drop-shadow-[0_8px_15px_rgba(0,0,0,0.08)]">
       <img src="/logo-kinezi-K-black.svg" alt="Logo Kinezi K" class="w-40 h-40 object-contain" />
     </div>
 
@@ -21,7 +21,7 @@ import Layout from '../layouts/Layout.astro';
           type="email" 
           id="email" 
           placeholder="kinezi@gmail.com" 
-          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all"
+          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
       </div>
 
@@ -31,7 +31,7 @@ import Layout from '../layouts/Layout.astro';
           type="password" 
           id="password" 
           placeholder="***********" 
-          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all"
+          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
       </div>
 
@@ -41,13 +41,13 @@ import Layout from '../layouts/Layout.astro';
           type="password" 
           id="confirm-password" 
           placeholder="***********" 
-          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all"
+          class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
       </div>
 
       <button 
         type="submit" 
-        class="mt-4 w-full bg-[#A898EE] text-white font-bold py-4 rounded-full shadow-lg hover:bg-[#9685db] transition-all transform active:scale-95 text-lg"
+        class="mt-4 w-full bg-[#A898EE] text-white font-bold py-4 rounded-full transition-all duration-300 hover:bg-[#9685db] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(168,152,238,0.4)] active:scale-95 shadow-[0_8px_20px_rgba(168,152,238,0.3)] text-lg"
       >
         S'inscrire
       </button>
@@ -55,22 +55,22 @@ import Layout from '../layouts/Layout.astro';
     </form>
 
     <div class="w-full max-w-md flex items-center gap-4 my-12">
-      <div class="h-[1px] bg-black flex-1"></div>
-      <span class="text-sm font-medium text-black">ou</span>
-      <div class="h-[1px] bg-black flex-1"></div>
+      <div class="h-[1px] bg-black/20 flex-1"></div>
+      <span class="text-sm font-medium text-gray-500">ou</span>
+      <div class="h-[1px] bg-black/20 flex-1"></div>
     </div>
 
     <div class="flex gap-8 items-center">
-      <button class="transition-transform hover:scale-110 active:scale-95">
+      <button class="transition-all duration-300 hover:-translate-y-1 hover:scale-110 active:scale-95 drop-shadow-md hover:drop-shadow-xl">
         <img src="/apple.png" alt="Connexion avec Apple" class="w-10 h-10 object-contain" />
       </button>
-      <button class="transition-transform hover:scale-110 active:scale-95">
+      <button class="transition-all duration-300 hover:-translate-y-1 hover:scale-110 active:scale-95 drop-shadow-md hover:drop-shadow-xl">
         <img src="/google.png" alt="Connexion avec Google" class="w-10 h-10 object-contain" />
       </button>
     </div>
 
-    <p class="mt-6 text-sm text-gray-600">
-      Déjà un compte ? <a href="/login" class="font-bold text-[#8C17F8] hover:underline">Se connecter</a>
+    <p class="mt-8 text-sm text-gray-600">
+      Déjà un compte ? <a href="/login" class="font-bold text-[#A898EE] underline decoration-2 underline-offset-4 hover:text-[#9685db] transition-colors">Se connecter</a>
     </p>
 
   </main>

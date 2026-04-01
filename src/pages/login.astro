@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Kinezi | Se connecter">
+  <main class="min-h-screen bg-[#A898EE] flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
+    
+    <div class="absolute bottom-0 left-0 w-full h-[15vh] bg-white rounded-t-[100%_100%] z-0 shadow-[0_-15px_50px_rgba(0,0,0,0.08)]"></div>
+
+    <div class="w-full flex flex-col items-center z-10 -mt-28">
+      
+      <div class="mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)]">
+        <img 
+          src="/logo-kinezi-K.svg" 
+          alt="Logo Kinezi K" 
+          class="w-40 h-40 object-contain brightness-0 invert" 
+        />
+      </div>
+
+      <div class="w-full max-w-sm flex flex-col gap-6">
+        
+        <button class="w-full bg-white flex items-center justify-center gap-4 py-4 px-6 rounded-full transition-all duration-300 hover:bg-white/95 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] active:scale-95 shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+          <img src="/apple.png" alt="Apple logo" class="w-8 h-8 object-contain" />
+          <span class="text-gray-900 font-medium text-lg">Continuer avec Apple</span>
+        </button>
+
+        <button class="w-full bg-white flex items-center justify-center gap-4 py-4 px-6 rounded-full transition-all duration-300 hover:bg-white/95 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] active:scale-95 shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+          <img src="/google.png" alt="Google logo" class="w-8 h-8 object-contain" />
+          <span class="text-gray-900 font-medium text-lg">Continuer avec Google</span>
+        </button>
+
+        <a href="/login-mail" class="w-full bg-white flex items-center justify-center py-4 px-6 rounded-full transition-all duration-300 hover:bg-white/95 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] active:scale-95 shadow-[0_8px_20px_rgba(0,0,0,0.08)] text-center">
+          <span class="text-gray-900 font-medium text-lg">Continuer avec e-mail</span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="absolute bottom-4 z-10 w-full text-center flex flex-col gap-1">
+      <h2 class="text-xl md:text-2xl font-black text-black tracking-tight">
+        Vous n’avez pas de compte ?
+      </h2>
+      <a href="/register" class="text-lg md:text-xl font-medium text-[#A898EE] underline decoration-2 underline-offset-4 hover:text-[#9685db] transition-colors">
+        Inscrivez vous ici
+      </a>
+    </div>
+
+  </main>
+</Layout>
