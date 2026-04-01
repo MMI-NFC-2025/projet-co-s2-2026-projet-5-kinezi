@@ -1,11 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
+HEAD
 import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
+import Menu from '../components/Menu.astro';
+composant-menu
 ---
 
 <Layout title="Kinezi | Brisez le silence, apprenez à signer.">
     <Header />
+    <Menu />
 
     <main class="relative min-h-[90vh] bg-white pt-[180px] pb-8 overflow-hidden">
         <div class="absolute inset-0 z-0 opacity-[0.08]" style="background-image: radial-gradient(#8C17F8 1px, transparent 1px); background-size: 32px 32px;"></div>
@@ -87,7 +91,11 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
                 <div class="flex flex-col items-center text-center group">
                     <div class="relative w-48 h-48 md:w-60 md:h-60 mb-6 rounded-full p-1 border-2 border-white/50 group-hover:border-white transition-all duration-300">
                         <div class="w-full h-full rounded-full overflow-hidden">
+HEAD
                             <img src="/lilian_rond.png" alt="Lilian Maitre" class="w-full h-full object-cover scale-[1.1] object-center transform group-hover:scale-[1.2] transition-transform duration-500" />
+
+                            <img src="/lilian-rond.png" alt="Lilian Maitre" class="w-full h-full object-cover scale-[1.1] object-center transform group-hover:scale-[1.2] transition-transform duration-500" />
+composant-menu
                         </div>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Lilian Maitre</h3>
@@ -98,7 +106,11 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
                 <div class="flex flex-col items-center text-center group">
                     <div class="relative w-48 h-48 md:w-60 md:h-60 mb-6 rounded-full p-1 border-2 border-white/50 group-hover:border-white transition-all duration-300">
                         <div class="w-full h-full rounded-full overflow-hidden">
+HEAD
                             <img src="/ewan_rond.png" alt="Ewan Menigoz" class="w-full h-full object-cover scale-[1.1] object-center transform group-hover:scale-[1.2] transition-transform duration-500" />
+
+                            <img src="/ewan-rond.png" alt="Ewan Menigoz" class="w-full h-full object-cover scale-[1.1] object-center transform group-hover:scale-[1.2] transition-transform duration-500" />
+composant-menu
                         </div>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Ewan Menigoz</h3>
@@ -109,7 +121,11 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
                 <div class="flex flex-col items-center text-center group">
                     <div class="relative w-48 h-48 md:w-60 md:h-60 mb-6 rounded-full p-1 border-2 border-white/50 group-hover:border-white transition-all duration-300">
                         <div class="w-full h-full rounded-full overflow-hidden">
+HEAD
                             <img src="/enzo_rond.png" alt="Enzo Hillairet" class="w-full h-full object-cover scale-[1.1] object-center transform group-hover:scale-[1.2] transition-transform duration-500" />
+
+                            <img src="/enzo-rond.png" alt="Enzo Hillairet" class="w-full h-full object-cover scale-[1.1] object-center transform group-hover:scale-[1.2] transition-transform duration-500" />
+composant-menu
                         </div>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Enzo Hillairet</h3>
@@ -139,9 +155,15 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
                         <div class="flex items-center gap-4 mb-2">
                             <span class="text-2xl font-black text-gray-900">10€/mois</span>
                             <div class="flex gap-2">
+HEAD
                                 <img src="/infini.png" alt="Illimité" class="w-7 h-7 object-contain" />
                                 <img src="/couronne.png" alt="Premium" class="w-7 h-7 object-contain" />
                                 <img src="/video.png" alt="Badge" class="w-7 h-7 object-contain" />
+
+                                <img src="/infini.svg" alt="Illimité" class="w-7 h-7 object-contain" />
+                                <img src="/couronne.svg" alt="Premium" class="w-7 h-7 object-contain" />
+                                <img src="/video.svg" alt="Badge" class="w-7 h-7 object-contain" />
+composant-menu
                             </div>
                         </div>
 
@@ -165,17 +187,24 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
 
     <section class="pb-40 bg-white relative z-10">
         <div class="max-w-[1300px] mx-auto px-8 lg:px-16 text-center">
+HEAD
             
             <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-10 tracking-tight">
                 Rejoignez nous !
             </h2>
 
+
+            <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-10 tracking-tight">
+                Rejoignez nous !
+            </h2>
+composant-menu
             <a 
                 href="/register" 
                 class="inline-block bg-[#8C17F8] text-white font-black text-2xl md:text-3xl px-16 py-6 rounded-full shadow-[0_15px_35px_rgba(140,23,248,0.3)] hover:shadow-[0_20px_45px_rgba(140,23,248,0.4)] transition-all transform hover:-translate-y-1 active:scale-95 animate-pulse-subtle"
             >
                 Je rejoins !
             </a>
+HEAD
 
         </div>
     </section>
@@ -188,6 +217,12 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
         </main>
 
     <Footer /> 
+
+        </div>
+    </section>
+
+    <Footer />
+composant-menu
 </Layout>
 
 <style>
@@ -207,5 +242,19 @@ import Footer from '../components/Footer.astro'; // 1. L'ajouter ici
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
+HEAD
     .animate-fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes pulse-subtle {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+    }
+    .animate-pulse-subtle {
+        animation: pulse-subtle 3s ease-in-out infinite;
+    }
+composant-menu
 </style>
