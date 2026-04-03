@@ -1,0 +1,49 @@
+---
+// src/components/SiteHeader.astro
+---
+
+<header class="bg-[#A898EE] h-20 flex items-center px-6 lg:px-16 z-50 relative shadow-sm">
+  <div class="max-w-[1300px] mx-auto w-full flex justify-between items-center">
+    
+    <a href="/" class="group flex items-center transition-transform duration-300 hover:scale-105">
+      <img 
+        src="/logo-kinezi.png" 
+        alt="Logo Kinezi" 
+        class="h-8 md:h-10 w-auto object-contain brightness-0 invert" 
+      />
+    </a>
+    
+    <div class="flex items-center gap-8">
+      
+      <nav class="hidden lg:flex items-center gap-6 xl:gap-10">
+        <a href="/" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Accueil</a>
+        <a href="/jeux" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Jeux</a>
+        <a href="/dictionnaire" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Dictionnaire</a>
+        <a href="/stats" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Stats</a>
+      </nav>
+
+      <button id="menu-btn" class="relative w-12 h-12 z-20 pointer-events-auto group cursor-pointer outline-none flex justify-center items-center -mr-2">
+        <div class="relative w-8 h-8 flex flex-col justify-center items-end">
+          <span class="line-1 absolute h-[3px] w-8 bg-white rounded-full transition-all duration-300 ease-in-out -translate-y-[10px] group-hover:bg-white/90"></span>
+          <span class="line-2 absolute h-[3px] w-5 bg-white rounded-full transition-all duration-300 ease-in-out right-0 group-hover:w-8 group-hover:bg-white/90"></span>
+          <span class="line-3 absolute h-[3px] w-8 bg-white rounded-full transition-all duration-300 ease-in-out translate-y-[10px] group-hover:bg-white/90"></span>
+        </div>
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Animation pour transformer les lignes en croix (X) */
+  #menu-btn.is-active .line-1 {
+    transform: translateY(0) rotate(45deg);
+  }
+  #menu-btn.is-active .line-2 {
+    opacity: 0;
+    width: 0;
+  }
+  #menu-btn.is-active .line-3 {
+    transform: translateY(0) rotate(-45deg);
+  }
+</style>
