@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+---
+
+<Layout title="Kinezi | Votre Profil">
+  <main class="min-h-screen bg-[#A898EE] flex flex-col items-center pb-12 overflow-x-hidden">
+    
+    <SiteHeader />
+
+    <div class="w-full bg-gradient-to-b from-[#A898EE] to-[#8C17F8] pt-4 pb-20 flex flex-col items-center rounded-b-[100%_40px] md:rounded-b-[100%_60px] shadow-[0_15px_30px_rgba(140,23,248,0.2)] relative z-10">
+      
+      <div class="relative w-28 h-28 rounded-full border-4 border-white flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(255,255,255,0.4)] bg-white/10 backdrop-blur-sm mt-4 transition-transform hover:scale-105 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      
+      <h2 class="text-white text-3xl font-black tracking-tight drop-shadow-md">Thomas</h2>
+      <p class="text-white/80 text-sm mt-1 font-medium bg-black/10 px-3 py-1 rounded-full backdrop-blur-md">ID: o4g3yq8bkgg4bxz</p>
+    </div>
+
+    <div class="w-full max-w-2xl px-6 mt-10 flex items-center justify-center gap-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-500 drop-shadow-[0_2px_4px_rgba(234,179,8,0.4)] transition-transform hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" />
+      </svg>
+      
+      <div class="flex-1 h-4 bg-black/20 rounded-full flex shadow-inner overflow-hidden border border-white/20">
+        <div class="h-full bg-gradient-to-r from-white/80 to-white w-3/4 rounded-full relative overflow-hidden">
+           <div class="absolute top-0 left-0 w-full h-1/2 bg-white/40"></div>
+        </div>
+      </div>
+      
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-black/30 drop-shadow-sm transition-transform hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" />
+      </svg>
+    </div>
+
+    <div class="w-full max-w-4xl px-6 mt-12 flex flex-wrap items-center justify-center gap-6 md:gap-10">
+      
+      <div class="flex flex-col gap-4">
+        <div class="bg-white rounded-full px-6 py-4 flex items-center gap-4 shadow-[0_8px_20px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_25px_rgba(0,0,0,0.12)] cursor-default border border-transparent hover:border-[#A898EE]/30">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-orange-500 drop-shadow-[0_2px_4px_rgba(249,115,22,0.3)]" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152-.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248zM15.75 14.25a3.75 3.75 0 11-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 011.925-3.545 3.75 3.75 0 013.255 3.717z" clip-rule="evenodd" />
+          </svg>
+          <span class="font-black text-gray-800 text-xl tracking-tight">20 Jours</span>
+        </div>
+        
+        <div class="bg-white rounded-full px-6 py-4 flex items-center gap-4 shadow-[0_8px_20px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_25px_rgba(0,0,0,0.12)] cursor-default border border-transparent hover:border-[#A898EE]/30">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-600 drop-shadow-[0_2px_4px_rgba(202,138,4,0.3)]" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" />
+          </svg>
+          <span class="font-black text-gray-800 text-xl tracking-tight">Bronze</span>
+        </div>
+      </div>
+
+      <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(34,197,94,0.25)] shrink-0 transition-transform duration-300 hover:scale-110 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-green-500 drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clip-rule="evenodd" />
+        </svg>
+      </div>
+
+      <div class="bg-white rounded-[32px] w-full max-w-[280px] py-8 flex flex-col items-center justify-center shadow-[0_8px_25px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_30px_rgba(0,0,0,0.1)] border border-transparent hover:border-[#A898EE]/30 cursor-default">
+        <span class="text-gray-500 font-bold uppercase tracking-widest text-xs mb-1">Expérience</span>
+        <div class="flex items-baseline gap-1">
+          <span class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">564</span>
+          <span class="text-xl font-bold text-[#A898EE]">exp</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-4 mt-14 px-6">
+      
+      <button class="bg-white px-8 py-4 rounded-full flex items-center gap-3 shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.12)] active:scale-95 group">
+        <span class="font-black text-gray-800 text-lg group-hover:text-[#8C17F8] transition-colors">Partager mon profil</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-800 group-hover:text-[#8C17F8] transition-colors" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+        </svg>
+      </button>
+
+      <button class="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.12)] active:scale-95 text-gray-800 hover:text-[#8C17F8]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.158 3.71 3.71 1.159-1.158a2.625 2.625 0 000-3.71zm-2.904 6.624L5.113 22.607a4.5 4.5 0 01-1.625 1.056l-3.322 1.253a.75.75 0 01-.963-.963l1.253-3.322a4.5 4.5 0 011.056-1.625l13.714-13.714 3.711 3.711z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mt-12 px-6 w-full flex justify-center pb-8">
+      <button class="relative overflow-hidden bg-[#8C17F8] text-white w-full max-w-sm py-4 rounded-full font-black text-xl shadow-[0_10px_25px_rgba(140,23,248,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(140,23,248,0.5)] active:scale-95 group">
+        <span class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full"></span>
+        <span class="relative z-10">Ajouter des amis</span>
+      </button>
+    </div>
+
+  </main>
+</Layout>
