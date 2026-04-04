@@ -1,49 +1,48 @@
 ---
 // src/components/SiteHeader.astro
+import Menu from './Menu.astro';
 ---
 
-<header class="bg-[#A898EE] h-20 flex items-center px-6 lg:px-16 z-50 relative shadow-sm">
-  <div class="max-w-[1300px] mx-auto w-full flex justify-between items-center">
+<div id="main-header" class="fixed top-2 md:top-3 left-0 w-full px-2 lg:px-8 z-[90] pointer-events-none flex justify-center flex-col items-center transition-all duration-500 ease-in-out">
+  
+  <header class="w-full max-w-[calc(1300px+2rem)] lg:max-w-[calc(1300px+4rem)] bg-[#8C17F8]/90 backdrop-blur-md shadow-[0_10px_30px_rgba(168,152,238,0.3)] border border-white/30 rounded-full h-20 px-4 lg:px-8 flex items-center pointer-events-auto transition-all duration-300">
     
-    <a href="/" class="group flex items-center transition-transform duration-300 hover:scale-105">
-      <img 
-        src="/logo-kinezi.png" 
-        alt="Logo Kinezi" 
-        class="h-8 md:h-10 w-auto object-contain brightness-0 invert" 
-      />
-    </a>
-    
-    <div class="flex items-center gap-8">
+    <div class="max-w-[1300px] mx-auto w-full flex justify-between items-center">
       
-      <nav class="hidden lg:flex items-center gap-6 xl:gap-10">
-        <a href="/" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Accueil</a>
-        <a href="/jeux" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Jeux</a>
-        <a href="/dictionnaire" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Dictionnaire</a>
-        <a href="/stats" class="text-white font-bold text-lg hover:text-white/80 transition-colors">Stats</a>
-      </nav>
+      <a href="/" class="group flex items-center transition-transform duration-300 hover:scale-105">
+        <img src="/logo-kinezi-K.svg" alt="Logo Kinezi" class="h-10 md:h-12 w-auto brightness-0 invert" />
+      </a>
+      
+      <div class="flex items-center gap-3 md:gap-5">
+        
+        <nav class="hidden lg:flex items-center gap-6 xl:gap-8 mr-2">
+          <a href="/" class="text-white font-bold text-base hover:text-white/80 transition-colors">Accueil</a>
+          <a href="/jeux" class="text-white font-bold text-base hover:text-white/80 transition-colors">Jeux</a>
+          <a href="/dictionnaire" class="text-white font-bold text-base hover:text-white/80 transition-colors">Dictionnaire</a>
+          <a href="/stats" class="text-white font-bold text-base hover:text-white/80 transition-colors">Stats</a>
+        </nav>
 
-      <button id="menu-btn" class="relative w-12 h-12 z-20 pointer-events-auto group cursor-pointer outline-none flex justify-center items-center -mr-2">
-        <div class="relative w-8 h-8 flex flex-col justify-center items-end">
-          <span class="line-1 absolute h-[3px] w-8 bg-white rounded-full transition-all duration-300 ease-in-out -translate-y-[10px] group-hover:bg-white/90"></span>
-          <span class="line-2 absolute h-[3px] w-5 bg-white rounded-full transition-all duration-300 ease-in-out right-0 group-hover:w-8 group-hover:bg-white/90"></span>
-          <span class="line-3 absolute h-[3px] w-8 bg-white rounded-full transition-all duration-300 ease-in-out translate-y-[10px] group-hover:bg-white/90"></span>
-        </div>
-      </button>
+        <button id="menu-btn" aria-label="Ouvrir le menu" class="relative w-12 h-12 pointer-events-auto group cursor-pointer outline-none flex justify-center items-center">
+          <div class="relative w-8 h-8 flex flex-col justify-center items-end">
+            <span class="line-1 absolute h-[3px] w-8 bg-white rounded-full transition-all duration-300 ease-in-out -translate-y-[10px] group-hover:bg-white/90"></span>
+            <span class="line-2 absolute h-[3px] w-5 bg-white rounded-full transition-all duration-300 ease-in-out right-0 group-hover:w-8 group-hover:bg-white/90"></span>
+            <span class="line-3 absolute h-[3px] w-8 bg-white rounded-full transition-all duration-300 ease-in-out translate-y-[10px] group-hover:bg-white/90"></span>
+          </div>
+        </button>
 
+      </div>
     </div>
-  </div>
-</header>
+  </header>
+
+</div>
+
+<Menu />
 
 <style>
-  /* Animation pour transformer les lignes en croix (X) */
-  #menu-btn.is-active .line-1 {
-    transform: translateY(0) rotate(45deg);
-  }
-  #menu-btn.is-active .line-2 {
-    opacity: 0;
-    width: 0;
-  }
-  #menu-btn.is-active .line-3 {
-    transform: translateY(0) rotate(-45deg);
+  /* L'ANIMATION MAGIQUE : Quand le menu est ouvert, le header glisse vers le haut et disparaît en fondu */
+  :global(body.menu-open) #main-header { 
+    transform: translateY(-150%); 
+    opacity: 0; 
+    pointer-events: none;
   }
 </style>
