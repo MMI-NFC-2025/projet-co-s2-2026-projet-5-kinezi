@@ -16,18 +16,34 @@
       
       <div class="flex items-center gap-3 md:gap-5">
         
-        <a 
-          href="/login" 
-          class="hidden sm:block border-2 border-white text-white font-bold text-sm px-4 py-2 rounded-full transition-all duration-300 hover:bg-white/10 active:scale-95"
-        >
-          Se connecter
-        </a>
+        <div id="guest-zone" class="flex items-center gap-3 md:gap-5">
+          <a 
+            href="/login-mail" 
+            class="hidden sm:block border-2 border-white text-white font-bold text-sm px-4 py-2 rounded-full transition-all duration-300 hover:bg-white/10 active:scale-95"
+          >
+            Se connecter
+          </a>
+
+          <a 
+            href="/register" 
+            class="bg-white text-[#A898EE] font-bold text-sm md:text-base px-5 py-2.5 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] active:scale-95"
+          >
+            Créer un compte
+          </a>
+        </div>
 
         <a 
-          href="/register" 
-          class="bg-white text-[#A898EE] font-bold text-sm md:text-base px-5 py-2.5 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] active:scale-95"
+          id="logged-zone" 
+          href="/profil" 
+          class="hidden items-center gap-3 bg-white/20 border border-white/40 px-4 py-2 rounded-full transition-all hover:bg-white/30 active:scale-95 group"
         >
-          Créer un compte
+          <span id="header-user-name" class="text-white font-bold text-sm md:text-base">Profil</span>
+          <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden">
+            <img id="header-avatar-img" src="" class="w-full h-full object-cover hidden" />
+            <svg id="header-avatar-svg" class="w-5 h-5 text-[#A898EE]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" />
+            </svg>
+          </div>
         </a>
 
         <button id="menu-btn" class="relative w-12 h-12 z-20 pointer-events-auto group cursor-pointer outline-none flex justify-center items-center -mr-2">
@@ -63,6 +79,50 @@
     </svg>
   </div>
 </div>
+
+<script>
+  import PocketBase from 'pocketbase';
+
+  const updateHeaderAuth = () => {
+    const pb = new PocketBase('http://127.0.0.1:8090');
+    
+    const guestZone = document.getElementById('guest-zone');
+    const loggedZone = document.getElementById('logged-zone');
+    const headerName = document.getElementById('header-user-name');
+    const avatarImg = document.getElementById('header-avatar-img');
+    const avatarSvg = document.getElementById('header-avatar-svg');
+
+    if (pb.authStore.isValid) {
+      const user = pb.authStore.model;
+
+      // On bascule l'affichage
+      if (guestZone) guestZone.classList.add('hidden');
+      if (loggedZone) {
+        loggedZone.classList.remove('hidden');
+        loggedZone.classList.add('flex');
+      }
+
+      // On injecte les données d'Enzo
+      if (headerName) headerName.textContent = user.first_name || 'Profil';
+      
+      if (user.avatar && avatarImg && avatarSvg) {
+        avatarImg.src = pb.files.getUrl(user, user.avatar);
+        avatarImg.classList.remove('hidden');
+        avatarSvg.classList.add('hidden');
+      }
+    } else {
+      // État déconnecté
+      if (guestZone) guestZone.classList.remove('hidden');
+      if (loggedZone) {
+        loggedZone.classList.add('hidden');
+        loggedZone.classList.remove('flex');
+      }
+    }
+  };
+
+  updateHeaderAuth();
+  document.addEventListener('astro:page-load', updateHeaderAuth);
+</script>
 
 <style>
   #menu-btn.is-active .line-1 {

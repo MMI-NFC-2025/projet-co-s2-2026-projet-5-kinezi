@@ -1,0 +1,31 @@
+---
+// src/pages/deconnexion.astro
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Kinezi | Déconnexion...">
+  <main class="h-screen w-full flex flex-col items-center justify-center bg-[#A898EE] text-white">
+    <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent mb-4"></div>
+    <p class="text-xl font-bold">Déconnexion en cours...</p>
+  </main>
+</Layout>
+
+<script>
+  import PocketBase from 'pocketbase';
+
+  const logout = () => {
+    const pb = new PocketBase('http://127.0.0.1:8090');
+    
+    // 1. On efface le token du localStorage
+    pb.authStore.clear();
+
+    // 2. On attend un tout petit peu pour le visuel et on redirige
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 800);
+  };
+
+  logout();
+  // Support pour Astro View Transitions
+  document.addEventListener('astro:page-load', logout);
+</script>

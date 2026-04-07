@@ -13,7 +13,7 @@ import Layout from '../layouts/Layout.astro';
       Se connecter
     </h1>
 
-    <form class="w-full max-w-md flex flex-col gap-6">
+    <form id="login-form" class="w-full max-w-md flex flex-col gap-6">
       
       <div class="flex flex-col gap-2">
         <label for="email" class="text-sm font-medium text-gray-700 ml-2">Email</label>
@@ -21,6 +21,7 @@ import Layout from '../layouts/Layout.astro';
           type="email" 
           id="email" 
           placeholder="kinezi@gmail.com" 
+          required
           class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
       </div>
@@ -31,6 +32,7 @@ import Layout from '../layouts/Layout.astro';
           type="password" 
           id="password" 
           placeholder="***********" 
+          required
           class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
         <div class="flex justify-end pr-4 mt-1">
@@ -40,11 +42,16 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
 
+      <p id="error-message" class="text-red-500 text-sm font-medium text-center hidden">
+        Email ou mot de passe incorrect.
+      </p>
+
       <button 
         type="submit" 
-        class="mt-4 w-full bg-[#A898EE] text-white font-bold py-4 rounded-full transition-all duration-300 hover:bg-[#9685db] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(168,152,238,0.4)] active:scale-95 shadow-[0_8px_20px_rgba(168,152,238,0.3)] text-lg"
+        id="submit-btn"
+        class="mt-4 w-full bg-[#A898EE] text-white font-bold py-4 rounded-full transition-all duration-300 hover:bg-[#9685db] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(168,152,238,0.4)] active:scale-95 shadow-[0_8px_20px_rgba(168,152,238,0.3)] text-lg flex items-center justify-center"
       >
-        Se connecter
+        <span>Se connecter</span>
       </button>
 
     </form>
@@ -70,3 +77,52 @@ import Layout from '../layouts/Layout.astro';
 
   </main>
 </Layout>
+
+<script>
+  import PocketBase from 'pocketbase';
+
+  const setupLogin = () => {
+    const form = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('error-message');
+    const submitBtn = document.getElementById('submit-btn');
+
+    if (!form) return;
+
+    // Connexion à la base de données locale
+    const pb = new PocketBase('http://127.0.0.1:8090');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Empêche le rechargement classique de la page
+      
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      // On réinitialise l'état visuel du bouton
+      errorMessage.classList.add('hidden');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span class="animate-pulse">Connexion en cours...</span>';
+      submitBtn.disabled = true;
+
+      try {
+        // Tentative de connexion via PocketBase
+        const authData = await pb.collection('users').authWithPassword(email, password);
+        
+        // Si réussi, PocketBase a sauvegardé un jeton (token) dans le navigateur.
+        // On redirige vers la page profil !
+        window.location.href = '/profil';
+
+      } catch (error) {
+        // En cas d'erreur (mauvais mdp, etc.)
+        console.error("Erreur de connexion:", error);
+        errorMessage.classList.remove('hidden');
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+      }
+    });
+  };
+
+  setupLogin();
+  document.addEventListener('astro:page-load', setupLogin);
+</script>
