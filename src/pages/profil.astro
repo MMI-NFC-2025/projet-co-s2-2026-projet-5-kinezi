@@ -1,11 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import Sidebar from '../components/Sidebar.astro';
 ---
 
 <Layout title="Kinezi | Votre Profil">
-  <main class="h-[100dvh] bg-[#A898EE] flex flex-col items-center justify-start md:justify-between pb-8 overflow-y-auto overflow-x-hidden md:overflow-hidden relative w-full">
+  <main class="h-[100dvh] bg-[#A898EE] flex flex-col items-center justify-start md:justify-between pb-8 overflow-y-auto overflow-x-hidden md:overflow-hidden relative w-full md:pl-24">
     
+    <Sidebar />
+
     <div class="w-full z-50">
       <SiteHeader />
     </div>
@@ -103,7 +106,6 @@ import SiteHeader from '../components/SiteHeader.astro';
       </button>
     </div>
 
-
     <div class="flex md:hidden w-full max-w-[400px] flex-row items-center justify-center px-2 mt-8 mb-6 animate-fade-in-up delay-200 shrink-0">
       
       <div class="flex flex-col gap-3.5 z-10 w-[150px]">
@@ -160,7 +162,6 @@ import SiteHeader from '../components/SiteHeader.astro';
   const loadProfileData = async () => {
     const pb = new PocketBase('http://127.0.0.1:8090');
 
-    // 1. Redirection si non connecté
     if (!pb.authStore.isValid) {
       window.location.href = '/login-mail';
       return;
@@ -229,7 +230,7 @@ import SiteHeader from '../components/SiteHeader.astro';
           formData.append('avatar', file);
           try {
             await pb.collection('users').update(user.id, formData);
-            window.location.reload(); // Recharger pour voir la nouvelle image
+            window.location.reload(); 
           } catch (error) {
             console.error("Erreur upload:", error);
           }
@@ -241,7 +242,6 @@ import SiteHeader from '../components/SiteHeader.astro';
     try {
       const stats = await pb.collection('user_stats').getFirstListItem(`user="${user.id}"`);
       
-      // Textes des stats
       const pcStreak = document.getElementById('pc-streak');
       const pcRank = document.getElementById('pc-rank');
       const pcXp = document.getElementById('pc-xp');
@@ -256,7 +256,6 @@ import SiteHeader from '../components/SiteHeader.astro';
       if(mobRank) mobRank.textContent = stats.rank_tier || 'Débutant';
       if(mobXp) mobXp.textContent = `${stats.experience_points} exp`;
 
-      // --- LOGIQUE JAUGE ---
       const xpGoal = 1000;
       const progressPercentage = Math.min((stats.experience_points / xpGoal) * 100, 100);
       const xpBar = document.getElementById('xp-bar');
