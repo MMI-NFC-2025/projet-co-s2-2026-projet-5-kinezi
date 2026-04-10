@@ -13,13 +13,16 @@ import Layout from '../layouts/Layout.astro';
       Créer un compte
     </h1>
 
-    <form class="w-full max-w-md flex flex-col gap-6">
+    {/* Ajout de l'ID sur le form */}
+    <form id="register-form" class="w-full max-w-md flex flex-col gap-6">
       
       <div class="flex flex-col gap-2">
         <label for="email" class="text-sm font-medium text-gray-700 ml-2">Email</label>
         <input 
           type="email" 
           id="email" 
+          name="email" 
+          required
           placeholder="kinezi@gmail.com" 
           class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
@@ -30,6 +33,9 @@ import Layout from '../layouts/Layout.astro';
         <input 
           type="password" 
           id="password" 
+          name="password" 
+          required
+          minlength="8"
           placeholder="***********" 
           class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
@@ -37,16 +43,24 @@ import Layout from '../layouts/Layout.astro';
 
       <div class="flex flex-col gap-2">
         <label for="confirm-password" class="text-sm font-medium text-gray-700 ml-2">Confirmer mot de passe</label>
+        {/* Le name DOIT être passwordConfirm pour PocketBase */}
         <input 
           type="password" 
           id="confirm-password" 
+          name="passwordConfirm" 
+          required
+          minlength="8"
           placeholder="***********" 
           class="w-full bg-[#D9D9D9] border-none rounded-full py-4 px-6 text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-[#A898EE] outline-none transition-all shadow-[0_2px_10px_rgba(0,0,0,0.04)] focus:shadow-[0_5px_15px_rgba(168,152,238,0.2)]"
         />
       </div>
 
+      {/* Zone de message d'erreur (cachée par défaut) */}
+      <div id="error-message" class="hidden text-red-500 text-sm font-bold text-center bg-red-50 py-3 rounded-xl border border-red-100"></div>
+
       <button 
         type="submit" 
+        id="submit-btn"
         class="mt-4 w-full bg-[#A898EE] text-white font-bold py-4 rounded-full transition-all duration-300 hover:bg-[#9685db] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(168,152,238,0.4)] active:scale-95 shadow-[0_8px_20px_rgba(168,152,238,0.3)] text-lg"
       >
         S'inscrire
@@ -75,3 +89,71 @@ import Layout from '../layouts/Layout.astro';
 
   </main>
 </Layout>
+
+<script>
+  import PocketBase from 'pocketbase';
+
+  // 1. Initialisation de la connexion à ton backend local
+  const pb = new PocketBase('http://127.0.0.1:8090');
+
+  // 2. Récupération des éléments du DOM
+  const form = document.getElementById('register-form') as HTMLFormElement;
+  const errorDiv = document.getElementById('error-message');
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+  // 3. Écoute de la soumission du formulaire
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
+    if (!errorDiv || !submitBtn) return;
+    
+    // Réinitialisation de l'état
+    errorDiv.classList.add('hidden');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Création en cours...';
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+
+    // Vérification côté client : les mots de passe sont-ils identiques ?
+    if (data.password !== data.passwordConfirm) {
+      errorDiv.textContent = "Les mots de passe ne correspondent pas.";
+      errorDiv.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitBtn.textContent = "S'inscrire";
+      return;
+    }
+
+    try {
+      // Étape A : Création de l'utilisateur
+      await pb.collection('users').create({
+        email: data.email,
+        password: data.password,
+        passwordConfirm: data.passwordConfirm,
+      });
+
+      // Étape B : Connexion automatique (pour générer le token de session)
+      await pb.collection('users').authWithPassword(data.email.toString(), data.password.toString());
+
+      // Étape C : Redirection vers le profil ou l'accueil
+      window.location.href = '/profil'; // Modifie selon ton besoin
+      
+    } catch (err: any) {
+      console.error("Détails de l'erreur :", err);
+      
+      // Gestion des erreurs renvoyées par PocketBase
+      if (err.response && err.response.data) {
+        // Extraction des messages d'erreur spécifiques (ex: "Email invalide")
+        const details = Object.values(err.response.data)
+          .map((e: any) => e.message)
+          .join(' | ');
+        errorDiv.textContent = details || "Erreur de validation.";
+      } else {
+        errorDiv.textContent = "Impossible de joindre le serveur. Ton terminal PocketBase est-il ouvert ?";
+      }
+      
+      errorDiv.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitBtn.textContent = "S'inscrire";
+    }
+  });
+</script>
