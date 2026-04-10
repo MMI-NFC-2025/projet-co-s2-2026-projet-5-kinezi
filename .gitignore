@@ -22,3 +22,5 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+backend/pocketbase_0.36.8_windows_amd64/pb_data/
