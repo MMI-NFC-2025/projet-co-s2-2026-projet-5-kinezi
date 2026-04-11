@@ -1,0 +1,19 @@
+{/* Lecteur Vidéo Modernisé */}
+      <div class="relative bg-black rounded-[2rem] overflow-hidden shadow-2xl aspect-video border-4 border-white group">
+        
+        {lesson.video ? (
+          // Si une vidéo est envoyée sur PocketBase, on l'affiche :
+          <video 
+            src={pb.files.getUrl(lesson, lesson.video)} 
+            controls 
+            class="w-full h-full object-cover"
+            preload="metadata"
+          ></video>
+        ) : (
+          // S'il n'y a pas de vidéo, on affiche un message :
+          <div class="absolute inset-0 flex items-center justify-center bg-gray-900">
+            <p class="text-white/50 font-medium italic">Vidéo en cours de préparation...</p>
+          </div>
+        )}
+        
+      </div>

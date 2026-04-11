@@ -1,0 +1,143 @@
+---
+// src/pages/bibliotheque.astro
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/SiteHeader.astro'; 
+import Menu from '../components/Menu.astro';     
+import Sidebar from '../components/Sidebar.astro'; 
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+let lessons = [];
+
+try {
+  const records = await pb.collection('lessons').getFullList({
+    sort: 'category,order',
+  });
+  lessons = records;
+} catch (error) {
+  console.log("PocketBase indisponible ou vide. Utilisation du mock visuel.");
+}
+
+// ---------------------------------------------------------
+// DICTIONNAIRE D'ICÔNES (Plus professionnel que les emojis)
+// ---------------------------------------------------------
+// J'ai assigné un chemin SVG (Heroicons) pour chaque concept.
+const getIconPath = (title) => {
+  const icons = {
+    'Heureux': 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', // Visage souriant
+    'Triste': 'M9 12.75a4 4 0 005.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', // Visage triste
+    'Fatigué': 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z', // Lune (Sommeil)
+    'Colère': 'M13 10V3L4 14h7v7l9-11h-7z', // Éclair
+    'Avoir peur': 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', // Triangle d'alerte
+    'Être surpris': 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z', // Œil grand ouvert
+    'Avoir faim': 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z', // Panier
+    'Avoir soif': 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z', // Fiole / Eau
+    'Avoir chaud': 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z', // Soleil
+    'Avoir froid': 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z', // Flocon/Étoiles
+  };
+  // Si le titre n'est pas dans la liste, on renvoie une icône "Livre de leçon" par défaut
+  return icons[title] || 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
+};
+
+// Mock de secours sans les emojis
+if (lessons.length === 0) {
+  lessons = [
+    { category: 'Sentiments de base', title: 'Heureux' },
+    { category: 'Sentiments de base', title: 'Triste' },
+    { category: 'Sentiments de base', title: 'Fatigué' },
+    { category: 'Sentiments de base', title: 'Colère' },
+    { category: 'Sensations physiques', title: 'Avoir peur' },
+    { category: 'Sensations physiques', title: 'Être surpris' },
+    { category: 'Sensations physiques', title: 'Avoir faim' },
+    { category: 'Sensations physiques', title: 'Avoir soif' },
+    { category: 'Sensations physiques', title: 'Avoir chaud' },
+    { category: 'Sensations physiques', title: 'Avoir froid' },
+  ];
+}
+
+const groupedLessons = lessons.reduce((acc, lesson) => {
+  if (!acc[lesson.category]) acc[lesson.category] = [];
+  acc[lesson.category].push(lesson);
+  return acc;
+}, {});
+---
+
+<Layout title="Bibliothèque | Kinezi">
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-screen bg-[#F8F9FA] md:ml-20 pt-32 pb-24 px-6 md:px-12">
+    
+    <div class="max-w-[1100px] mx-auto">
+      
+      {/* Titre principal */}
+      <div class="text-center mb-20">
+        <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
+          Bibliothèque<br/>
+          <span class="text-[#A898EE]">de leçons</span>
+        </h1>
+        <p class="mt-4 text-gray-500 font-medium text-lg">Choisis une catégorie et commence à apprendre la LSF.</p>
+      </div>
+
+      {Object.entries(groupedLessons).map(([categoryName, categoryLessons]) => (
+        <section class="mb-16">
+          
+          <div class="flex items-center gap-4 mb-8">
+            <h2 class="text-2xl font-black text-gray-900 tracking-tight">
+              {categoryName}
+            </h2>
+            <div class="h-[2px] flex-1 bg-gradient-to-r from-gray-200 to-transparent rounded-full"></div>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {categoryLessons.map((lesson) => (
+              <a href={`/lecon/${lesson.id || lesson.title.toLowerCase().replace(/ /g, '-')}`} class="group relative flex flex-col bg-white rounded-3xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(168,152,238,0.15)] outline-none block">
+                
+                {/* Miniature de la vidéo */}
+                <div class="w-full aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-200 border border-gray-100 rounded-2xl flex items-center justify-center mb-5 relative overflow-hidden">
+                  <div class="absolute inset-0 bg-[#A898EE]/0 group-hover:bg-[#A898EE]/5 transition-colors duration-500"></div>
+
+                  {/* Bouton Play */}
+                  <div class="relative w-16 h-16 bg-white/70 backdrop-blur-md border border-white/50 rounded-full flex items-center justify-center shadow-sm text-gray-700 transition-all duration-500 group-hover:bg-[#A898EE] group-hover:text-white group-hover:scale-110 group-hover:shadow-[0_10px_20px_rgba(168,152,238,0.4)]">
+                    <svg class="w-7 h-7 ml-1" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Bas de la carte */}
+                <div class="flex items-center gap-4 px-2 pb-2">
+                  
+                  {/* Nouvelle Icône Vectorielle (Remplace l'Emoji) */}
+                  <div class="w-12 h-12 flex-shrink-0 bg-[#A898EE]/10 rounded-xl flex items-center justify-center text-[#A898EE] group-hover:bg-[#A898EE] group-hover:text-white transition-all duration-500">
+                    <svg class="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d={getIconPath(lesson.title)}></path>
+                    </svg>
+                  </div>
+
+                  <h3 class="text-xl font-black text-gray-900 group-hover:text-[#A898EE] transition-colors duration-300">
+                    {lesson.title}
+                  </h3>
+
+                  <div class="ml-auto opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 text-[#A898EE]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+
+                </div>
+                
+              </a>
+            ))}
+            
+          </div>
+        </section>
+      ))}
+
+    </div>
+  </main>
+</Layout>
