@@ -3,20 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/SiteHeader.astro'; 
 import Menu from '../components/Menu.astro';     
 import Sidebar from '../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
-
-const pb = new PocketBase('http://127.0.0.1:8090');
-
-let favoriteLessons = [];
-
-try {
-  // 🚧 Pour l'instant : on récupère juste les 6 premières leçons de ta base 
-  // pour construire le design. On fera la vraie logique de favoris après !
-  const records = await pb.collection('lessons').getList(1, 6);
-  favoriteLessons = records.items;
-} catch (error) {
-  console.error("Erreur PocketBase :", error);
-}
 ---
 
 <Layout title="Leçons préférées | Kinezi">
@@ -28,54 +14,125 @@ try {
   <main class="min-h-screen bg-white md:ml-20 pt-32 pb-24 px-6 md:px-12">
     <div class="max-w-[1000px] mx-auto">
       
-      {/* Titre de la page */}
       <div class="text-center mb-16">
-        <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-          Leçons préférées
+        <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
+          Leçons<br/>
+          <span class="text-[#A898EE]">préférées</span>
         </h1>
+        <p class="mt-4 text-gray-500 font-medium text-lg">Retrouve ici tous les signes que tu as aimés.</p>
       </div>
 
-      {favoriteLessons.length === 0 ? (
-        <div class="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
-          <p class="text-xl text-gray-500 font-medium mb-4">Tu n'as pas encore de leçons favorites.</p>
-          <a href="/bibliotheque" class="inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-colors">
-            Explorer la bibliothèque
-          </a>
-        </div>
-      ) : (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          
-          {favoriteLessons.map((lesson) => (
-            <a href={`/lecon/${lesson.id}`} class="group flex flex-col bg-[#E5E5E5]/50 rounded-2xl p-4 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg outline-none block">
-              
-              {/* Miniature (Carré violet comme sur ta maquette) */}
-              <div class="w-full aspect-square bg-[#A898EE] rounded-xl mb-4 flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:bg-[#9685db]">
-                 {/* Si tu veux remettre le bouton play plus tard, tu pourras le décommenter ici */}
-                 {/* <div class="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                   <svg class="w-6 h-6 ml-1" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                 </div> */}
-              </div>
+      <div id="status-container" class="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
+        <p id="status-text" class="text-xl text-gray-500 font-medium">Chargement de tes favoris...</p>
+        <a href="/bibliotheque" id="explore-link" class="hidden mt-6 inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-all">
+          Explorer la bibliothèque
+        </a>
+      </div>
 
-              {/* Bas de la carte : Cœur + Titre */}
-              <div class="flex items-center gap-3 px-1">
-                {/* Icône Cœur Violet Plein */}
-                <div class="text-[#A898EE] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                </div>
-
-                <h3 class="text-lg font-medium text-gray-900 truncate">
-                  {lesson.title}
-                </h3>
-              </div>
-              
-            </a>
-          ))}
-          
+      <div id="fav-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
         </div>
-      )}
 
     </div>
   </main>
 </Layout>
+
+<script>
+  import PocketBase from 'pocketbase';
+
+  const renderFavorites = async () => {
+    const pb = new PocketBase('http://127.0.0.1:8090');
+    const grid = document.getElementById('fav-grid');
+    const statusContainer = document.getElementById('status-container');
+    const statusText = document.getElementById('status-text');
+    const exploreLink = document.getElementById('explore-link');
+
+    if (!grid || !statusContainer || !statusText) return;
+
+    // 1. Vérifier la connexion
+    if (!pb.authStore.isValid || !pb.authStore.model) {
+      statusText.textContent = "Tu dois être connecté pour voir tes favoris.";
+      return;
+    }
+
+    try {
+      // 2. Récupérer les favoris avec la relation 'lecon'
+      const records = await pb.collection('favorites').getFullList({
+        filter: `user = "${pb.authStore.model.id}"`,
+        expand: 'lecon', // On demande à PocketBase d'inclure les détails de la leçon
+        sort: '-created',
+      });
+
+      console.log("Records trouvés:", records);
+
+      if (records.length === 0) {
+        statusText.textContent = "Tu n'as pas encore de leçons préférées.";
+        if (exploreLink) exploreLink.classList.remove('hidden');
+        return;
+      }
+
+      // 3. Générer les cartes
+      let html = '';
+      records.forEach(reg => {
+        const lesson = reg.expand?.lecon;
+        
+        // On ne génère la carte que si la leçon existe
+        if (lesson) {
+          html += `
+            <div id="card-${reg.id}" class="group bg-[#F8F9FA] rounded-[2rem] p-6 border border-gray-100 shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl">
+              <div class="w-full aspect-square bg-white rounded-[1.5rem] mb-6 flex items-center justify-center text-6xl shadow-inner">
+                ${lesson.emoji || '📚'}
+              </div>
+              <div class="flex items-center gap-4">
+                <button data-id="${reg.id}" class="remove-btn text-[#8C17F8] hover:scale-125 transition-transform cursor-pointer">
+                  <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                </button>
+                <h3 class="text-xl font-black text-gray-900 truncate">${lesson.title}</h3>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      // 4. Affichage final
+      if (html !== '') {
+        grid.innerHTML = html;
+        grid.classList.remove('hidden');
+        statusContainer.classList.add('hidden');
+      } else {
+        statusText.textContent = "Erreur de chargement des données des leçons.";
+      }
+
+      // 5. Gestion de la suppression
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          if (!id) return;
+
+          try {
+            const card = document.getElementById(`card-${id}`);
+            if (card) card.style.opacity = "0.3";
+            
+            await pb.collection('favorites').delete(id);
+            card?.remove();
+
+            // Si c'est vide après suppression
+            if (grid.querySelectorAll('[id^="card-"]').length === 0) {
+              window.location.reload();
+            }
+          } catch (err) {
+            console.error("Erreur suppression:", err);
+          }
+        });
+      });
+
+    } catch (error) {
+      console.error("Erreur globale page favoris:", error);
+      statusText.textContent = "Une erreur est survenue lors de la récupération des favoris.";
+    }
+  };
+
+  // Exécution au chargement du script
+  renderFavorites();
+</script>
