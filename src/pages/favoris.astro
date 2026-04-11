@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/SiteHeader.astro'; 
+import Menu from '../components/Menu.astro';     
+import Sidebar from '../components/Sidebar.astro'; 
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+let favoriteLessons = [];
+
+try {
+  // 🚧 Pour l'instant : on récupère juste les 6 premières leçons de ta base 
+  // pour construire le design. On fera la vraie logique de favoris après !
+  const records = await pb.collection('lessons').getList(1, 6);
+  favoriteLessons = records.items;
+} catch (error) {
+  console.error("Erreur PocketBase :", error);
+}
+---
+
+<Layout title="Leçons préférées | Kinezi">
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-screen bg-white md:ml-20 pt-32 pb-24 px-6 md:px-12">
+    <div class="max-w-[1000px] mx-auto">
+      
+      {/* Titre de la page */}
+      <div class="text-center mb-16">
+        <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
+          Leçons préférées
+        </h1>
+      </div>
+
+      {favoriteLessons.length === 0 ? (
+        <div class="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
+          <p class="text-xl text-gray-500 font-medium mb-4">Tu n'as pas encore de leçons favorites.</p>
+          <a href="/bibliotheque" class="inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-colors">
+            Explorer la bibliothèque
+          </a>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          {favoriteLessons.map((lesson) => (
+            <a href={`/lecon/${lesson.id}`} class="group flex flex-col bg-[#E5E5E5]/50 rounded-2xl p-4 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg outline-none block">
+              
+              {/* Miniature (Carré violet comme sur ta maquette) */}
+              <div class="w-full aspect-square bg-[#A898EE] rounded-xl mb-4 flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:bg-[#9685db]">
+                 {/* Si tu veux remettre le bouton play plus tard, tu pourras le décommenter ici */}
+                 {/* <div class="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                   <svg class="w-6 h-6 ml-1" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                 </div> */}
+              </div>
+
+              {/* Bas de la carte : Cœur + Titre */}
+              <div class="flex items-center gap-3 px-1">
+                {/* Icône Cœur Violet Plein */}
+                <div class="text-[#A898EE] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                </div>
+
+                <h3 class="text-lg font-medium text-gray-900 truncate">
+                  {lesson.title}
+                </h3>
+              </div>
+              
+            </a>
+          ))}
+          
+        </div>
+      )}
+
+    </div>
+  </main>
+</Layout>
