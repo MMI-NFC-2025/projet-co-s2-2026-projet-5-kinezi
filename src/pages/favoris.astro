@@ -24,13 +24,18 @@ import Sidebar from '../components/Sidebar.astro';
 
       <div id="status-container" class="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
         <p id="status-text" class="text-xl text-gray-500 font-medium">Chargement de tes favoris...</p>
-        <a href="/bibliotheque" id="explore-link" class="hidden mt-6 inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-all">
-          Explorer la bibliothèque
-        </a>
+        
+        <div id="explore-link-wrapper" class="hidden mt-6">
+          <a href="/bibliotheque" class="inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-all shadow-md hover:shadow-lg">
+            Explorer la bibliothèque
+          </a>
+        </div>
       </div>
 
-      <div id="fav-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
+      <div id="fav-grid-wrapper" class="hidden">
+        <div id="fav-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         </div>
+      </div>
 
     </div>
   </main>
@@ -41,24 +46,25 @@ import Sidebar from '../components/Sidebar.astro';
 
   const renderFavorites = async () => {
     const pb = new PocketBase('http://127.0.0.1:8090');
+    
+    // On cible nos nouveaux wrappers
+    const gridWrapper = document.getElementById('fav-grid-wrapper');
     const grid = document.getElementById('fav-grid');
     const statusContainer = document.getElementById('status-container');
     const statusText = document.getElementById('status-text');
-    const exploreLink = document.getElementById('explore-link');
+    const exploreWrapper = document.getElementById('explore-link-wrapper');
 
     if (!grid || !statusContainer || !statusText) return;
 
-    // 1. Vérifier la connexion
     if (!pb.authStore.isValid || !pb.authStore.model) {
       statusText.textContent = "Tu dois être connecté pour voir tes favoris.";
       return;
     }
 
     try {
-      // 2. Récupérer les favoris avec la relation 'lecon'
       const records = await pb.collection('favorites').getFullList({
         filter: `user = "${pb.authStore.model.id}"`,
-        expand: 'lecon', // On demande à PocketBase d'inclure les détails de la leçon
+        expand: 'lecon', 
         sort: '-created',
       });
 
@@ -66,45 +72,43 @@ import Sidebar from '../components/Sidebar.astro';
 
       if (records.length === 0) {
         statusText.textContent = "Tu n'as pas encore de leçons préférées.";
-        if (exploreLink) exploreLink.classList.remove('hidden');
+        if (exploreWrapper) exploreWrapper.classList.remove('hidden');
         return;
       }
 
-      // 3. Générer les cartes
       let html = '';
       records.forEach(reg => {
         const lesson = reg.expand?.lecon;
         
-        // On ne génère la carte que si la leçon existe
         if (lesson) {
           html += `
             <div id="card-${reg.id}" class="group bg-[#F8F9FA] rounded-[2rem] p-6 border border-gray-100 shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl">
-              <div class="w-full aspect-square bg-white rounded-[1.5rem] mb-6 flex items-center justify-center text-6xl shadow-inner">
-                ${lesson.emoji || '📚'}
-              </div>
+              <a href="/lecon/${lesson.id}" class="w-full aspect-square bg-white rounded-[1.5rem] mb-6 flex items-center justify-center text-6xl shadow-inner relative overflow-hidden block">
+                <span class="group-hover:scale-110 transition-transform duration-500">${lesson.emoji || '📚'}</span>
+              </a>
               <div class="flex items-center gap-4">
-                <button data-id="${reg.id}" class="remove-btn text-[#8C17F8] hover:scale-125 transition-transform cursor-pointer">
+                <button data-id="${reg.id}" class="remove-btn text-[#8C17F8] hover:scale-125 transition-transform cursor-pointer focus:outline-none">
                   <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
                 </button>
-                <h3 class="text-xl font-black text-gray-900 truncate">${lesson.title}</h3>
+                <a href="/lecon/${lesson.id}" class="text-xl font-black text-gray-900 truncate flex-1 hover:text-[#A898EE] transition-colors">
+                  ${lesson.title}
+                </a>
               </div>
             </div>
           `;
         }
       });
 
-      // 4. Affichage final
       if (html !== '') {
         grid.innerHTML = html;
-        grid.classList.remove('hidden');
+        if (gridWrapper) gridWrapper.classList.remove('hidden');
         statusContainer.classList.add('hidden');
       } else {
         statusText.textContent = "Erreur de chargement des données des leçons.";
       }
 
-      // 5. Gestion de la suppression
       document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const id = btn.getAttribute('data-id');
@@ -117,7 +121,6 @@ import Sidebar from '../components/Sidebar.astro';
             await pb.collection('favorites').delete(id);
             card?.remove();
 
-            // Si c'est vide après suppression
             if (grid.querySelectorAll('[id^="card-"]').length === 0) {
               window.location.reload();
             }
@@ -133,6 +136,6 @@ import Sidebar from '../components/Sidebar.astro';
     }
   };
 
-  // Exécution au chargement du script
   renderFavorites();
+  document.addEventListener('astro:page-load', renderFavorites);
 </script>
