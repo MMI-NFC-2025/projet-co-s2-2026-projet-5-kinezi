@@ -1,24 +1,62 @@
 ---
-// Si tu déplaces le dossier dans src/styles, ce chemin sera le bon :
 import '../styles/global.css';
 
 interface Props {
-	title?: string; // Le '?' évite l'erreur si le titre est vide
+    title?: string;
+    description?: string;
 }
 
-const { title = "Kinezi" } = Astro.props;
+const { 
+    title = "Kinezi - Apprendre la Langue des Signes", 
+    description = "Plateforme ludique pour apprendre la LSF en s'amusant." 
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>{title}</title>
-		<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-	</head>
-	<body class="bg-[#FFFFFF]">
-		<slot /> </body>
-	
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="description" content={description} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+        
+        <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <script 
+            async 
+            defer 
+            data-website-id="TON-ID-UNIQUE" 
+            src="https://cloud.umami.is/script.js">
+        </script>
+    </head>
+    
+    <body class="bg-[#FFFFFF] antialiased text-gray-900">
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#8C17F8] text-white p-4 rounded-xl z-[100]">
+            Aller au contenu principal
+        </a>
+
+        <div id="main-content">
+            <slot /> 
+        </div>
+    </body>
 </html>
+
+<style is:global>
+    :focus-visible {
+        outline: 3px solid #8C17F8;
+        outline-offset: 2px;
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+</style>

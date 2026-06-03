@@ -1,0 +1,95 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/SiteHeader.astro'; 
+import Menu from '../../components/Menu.astro';     
+import Sidebar from '../../components/Sidebar.astro'; 
+import PocketBase from 'pocketbase';
+
+export async function getStaticPaths() {
+  const pb = new PocketBase('http://127.0.0.1:8090');
+  const categories = await pb.collection('categories').getFullList();
+  
+  return categories.map((cat) => ({
+    params: { id: cat.slug || cat.id },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const choixText = category.title.toLowerCase().includes('alphabet') ? 'Lettre au choix' : 'Signe au choix';
+---
+
+<Layout title={`${category.title} - Modes de jeu | Kinezi`}>
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  {/* Ajustement de l'espacement supérieur (pt-6) pour correspondre à la page enchaînement */}
+  <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-8 pb-12 px-6 relative flex flex-col items-center overflow-x-hidden">
+    
+    <div class="w-full max-w-[1000px] relative z-10 flex flex-col items-center">
+      
+      {/* En-tête identique à l'autre page : icône seule, aligné à gauche, titre noir */}
+      <div class="w-full flex items-center justify-start mb-8 animate-fade-in">
+        <button 
+          onclick="history.back()" 
+          class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+          {category.title}
+        </h1>
+      </div>
+
+      <div class="text-center mb-8 md:mb-12 animate-fade-in" style="animation-delay: 100ms; opacity: 0; animation-fill-mode: forwards;">
+        <h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
+          Méthode<br/> d'apprentissage
+        </h2>
+      </div>
+
+      <div class="flex flex-col items-center gap-6 md:gap-8 w-full max-w-[500px] mx-auto">
+        
+        <a 
+          href={`/jeux/${category.slug || category.id}/enchainement`}
+          class="w-full group flex flex-col items-center justify-center py-8 md:py-10 px-6 rounded-[2rem] bg-[#8C17F8] shadow-[0_8px_30px_rgba(140,23,248,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(140,23,248,0.45)] animate-slide-up relative overflow-hidden"
+          style="animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards;"
+        >
+          <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+          <span class="text-white text-2xl md:text-3xl font-bold tracking-wide text-center">Enchaînement</span>
+        </a>
+
+        <a 
+          href={`/jeux/${category.slug || category.id}/choix`}
+          class="w-full group flex flex-col items-center justify-center py-8 md:py-10 px-6 rounded-[2rem] bg-[#8C17F8] shadow-[0_8px_30px_rgba(140,23,248,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(140,23,248,0.45)] animate-slide-up relative overflow-hidden"
+          style="animation-delay: 300ms; opacity: 0; animation-fill-mode: forwards;"
+        >
+          <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+          <span class="text-white text-2xl md:text-3xl font-bold tracking-wide text-center">{choixText}</span>
+        </a>
+
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+</style>

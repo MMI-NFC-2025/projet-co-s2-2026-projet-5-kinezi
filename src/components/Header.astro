@@ -8,9 +8,9 @@
       
       <a href="/" class="group flex items-center transition-transform duration-300 hover:scale-105">
         <img 
-          src="/logo-kinezi-K.svg" 
-          alt="Logo Kinezi" 
-          class="h-10 md:h-12 w-auto" 
+          src="/Icone_Opensigne_blanc.svg" 
+          alt="Logo Opensigne" 
+          class="h-12 md:h-16 w-auto"
         />
       </a>
       
@@ -81,37 +81,42 @@
 </div>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js'; 
 
   const updateHeaderAuth = () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
-    
     const guestZone = document.getElementById('guest-zone');
     const loggedZone = document.getElementById('logged-zone');
     const headerName = document.getElementById('header-user-name');
-    const avatarImg = document.getElementById('header-avatar-img');
+    // On précise à TypeScript que cet élément est bien une image
+    const avatarImg = document.getElementById('header-avatar-img') as HTMLImageElement | null;
     const avatarSvg = document.getElementById('header-avatar-svg');
+    const menuBtn = document.getElementById('menu-btn');
 
-    if (pb.authStore.isValid) {
+    if (menuBtn) {
+      menuBtn.onclick = () => {
+        menuBtn.classList.toggle('is-active');
+      };
+    }
+
+    // On vérifie explicitement que model n'est pas null pour satisfaire TypeScript
+    if (pb.authStore.isValid && pb.authStore.model) {
       const user = pb.authStore.model;
 
-      // On bascule l'affichage
       if (guestZone) guestZone.classList.add('hidden');
       if (loggedZone) {
         loggedZone.classList.remove('hidden');
         loggedZone.classList.add('flex');
       }
 
-      // On injecte les données d'Enzo
       if (headerName) headerName.textContent = user.first_name || 'Profil';
       
       if (user.avatar && avatarImg && avatarSvg) {
+        // user est maintenant garanti non-null, et avatarImg est reconnu comme une image
         avatarImg.src = pb.files.getUrl(user, user.avatar);
         avatarImg.classList.remove('hidden');
         avatarSvg.classList.add('hidden');
       }
     } else {
-      // État déconnecté
       if (guestZone) guestZone.classList.remove('hidden');
       if (loggedZone) {
         loggedZone.classList.add('hidden');

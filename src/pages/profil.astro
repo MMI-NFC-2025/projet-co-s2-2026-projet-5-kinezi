@@ -51,14 +51,14 @@ import Sidebar from '../components/Sidebar.astro';
         </button>
       </form>
 
-      <div class="animate-fade-in-up delay-100 w-full max-w-[340px] md:max-w-md mt-6 flex items-center justify-center gap-3 md:gap-4 px-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-yellow-500 drop-shadow-md transition-transform hover:scale-110 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" /></svg>
-        <div class="flex-1 h-3.5 bg-black/20 rounded-full flex shadow-inner overflow-hidden border border-white/20 backdrop-blur-sm">
+      <div class="animate-fade-in-up delay-100 w-full max-w-[340px] md:max-w-md mt-6 flex items-center justify-center gap-3 md:gap-4 px-4 relative group cursor-pointer" title="Objectif de niveau : 1000 XP">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-yellow-500 drop-shadow-md transition-transform group-hover:scale-110 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" /></svg>
+        <div class="flex-1 h-4 bg-black/20 rounded-full flex shadow-inner overflow-hidden border border-white/20 backdrop-blur-sm">
           <div id="xp-bar" class="h-full bg-white w-0 rounded-full relative overflow-hidden shadow-[0_0_12px_rgba(255,255,255,0.8)] transition-all duration-1000 ease-out">
             <div class="absolute top-0 left-0 w-full h-1/2 bg-white/50"></div>
           </div>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white/50 transition-transform hover:scale-110 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white/50 transition-transform group-hover:scale-110 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 27.395 27.395 0 002.208.036v1.455A4.507 4.507 0 007.5 16v1.5c0 .356.255.66.605.733l4.5 1.05v1.217h-2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5h-2.25v-1.217l4.5-1.05a.75.75 0 00.605-.733V16a4.507 4.507 0 00-2.342-3.968v-1.455c.732-.01 1.467-.024 2.208-.036a6.753 6.753 0 006.138-5.6.75.75 0 00-.584-.859 40.428 40.428 0 00-3.071-.543v-.858a.75.75 0 00-.75-.75H5.916a.75.75 0 00-.75.75zm1.5.75v1.492c.67-.065 1.344-.122 2.023-.171v-1.32h-2.023zm10.668 0v1.32c.68.05 1.353.106 2.023.171v-1.491h-2.023z" clip-rule="evenodd" /></svg>
       </div>
     </div>
 
@@ -71,7 +71,7 @@ import Sidebar from '../components/Sidebar.astro';
         </div>
         <div class="bg-[#F4F0FF] rounded-2xl px-5 py-4 flex items-center gap-4 transition-colors hover:bg-[#EAE4FF] cursor-default border border-white/50 shadow-sm">
           <span class="text-2xl leading-none drop-shadow-sm">🏆</span>
-          <span id="pc-rank" class="font-black text-gray-800 text-xl">-</span>
+          <span id="pc-rank" class="font-black text-gray-800 text-xl">Apprenti</span>
         </div>
       </div>
       
@@ -83,10 +83,10 @@ import Sidebar from '../components/Sidebar.astro';
       </div>
 
       <div class="flex-1 bg-white/95 backdrop-blur-md rounded-[32px] p-6 flex flex-col items-center justify-center shadow-[0_15px_35px_rgba(76,29,149,0.2)] border border-white/40 w-full">
-        <span class="text-gray-500 font-extrabold uppercase tracking-widest text-xs mb-2">Expérience</span>
+        <span class="text-gray-500 font-extrabold uppercase tracking-widest text-xs mb-2">Expérience Totale</span>
         <div class="flex items-baseline gap-1">
           <span id="pc-xp" class="text-6xl font-black text-[#8C17F8] tracking-tight">0</span>
-          <span class="text-xl font-bold text-gray-600">exp</span>
+          <span class="text-xl font-bold text-gray-600">XP</span>
         </div>
       </div>
 
@@ -115,7 +115,7 @@ import Sidebar from '../components/Sidebar.astro';
         </div>
         <div class="bg-white rounded-full py-3.5 px-4 flex items-center justify-start gap-2.5 shadow-md pr-8">
           <span class="text-2xl leading-none">🏆</span>
-          <span id="mob-rank" class="font-black text-base text-gray-900 whitespace-nowrap">-</span>
+          <span id="mob-rank" class="font-black text-base text-gray-900 whitespace-nowrap">Apprenti</span>
         </div>
       </div>
       
@@ -126,7 +126,7 @@ import Sidebar from '../components/Sidebar.astro';
       </div>
 
       <div class="bg-white rounded-r-[36px] rounded-l-none py-7 pl-12 pr-5 shadow-md z-10 w-[130px] flex items-center justify-center">
-        <span id="mob-xp" class="font-black text-base text-gray-900 whitespace-nowrap">0 exp</span>
+        <span id="mob-xp" class="font-black text-base text-gray-900 whitespace-nowrap text-[#8C17F8]">0 XP</span>
       </div>
 
     </div>
@@ -167,24 +167,35 @@ import Sidebar from '../components/Sidebar.astro';
       return;
     }
 
-    let user = pb.authStore.model;
+    let user: any = pb.authStore.model;
 
-    // --- ELEMENTS UI DU NOM ---
-    const nameContainer = document.getElementById('name-display-container');
-    const nameElement = document.getElementById('user-name');
-    const editNameBtn = document.getElementById('edit-name-btn');
-    const editNameForm = document.getElementById('edit-name-form');
-    const nameInput = document.getElementById('name-input');
-    const cancelNameBtn = document.getElementById('cancel-name-btn');
+    try {
+        const freshUser = await pb.collection('users').getOne(user.id);
+        user = freshUser;
+        
+        const authData = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}');
+        authData.model = user;
+        localStorage.setItem('pocketbase_auth', JSON.stringify(authData));
+    } catch (e) {
+        console.error("Impossible de rafraîchir les données de l'utilisateur", e);
+    }
 
-    if (nameElement) nameElement.textContent = user.first_name || 'Utilisateur';
+    const nameContainer = document.getElementById('name-display-container') as HTMLElement;
+    const nameElement = document.getElementById('user-name') as HTMLElement;
+    const editNameBtn = document.getElementById('edit-name-btn') as HTMLElement;
+    const editNameForm = document.getElementById('edit-name-form') as HTMLElement;
+    const nameInput = document.getElementById('name-input') as HTMLInputElement;
+    const cancelNameBtn = document.getElementById('cancel-name-btn') as HTMLElement;
 
-    // --- LOGIQUE POUR CHANGER LE PRÉNOM ---
+    if (nameElement) {
+      nameElement.textContent = user.first_name || user.name || user.username || 'Utilisateur';
+    }
+
     if (editNameBtn && editNameForm && nameContainer && cancelNameBtn && nameInput) {
       editNameBtn.addEventListener('click', () => {
         nameContainer.classList.add('hidden');
         editNameForm.classList.remove('hidden');
-        nameInput.value = user.first_name || '';
+        nameInput.value = user.first_name || user.name || user.username || '';
         nameInput.focus();
       });
 
@@ -200,7 +211,7 @@ import Sidebar from '../components/Sidebar.astro';
         try {
           const updatedUser = await pb.collection('users').update(user.id, { first_name: newName });
           user = updatedUser;
-          nameElement.textContent = user.first_name;
+          nameElement.textContent = user.first_name || user.name || user.username;
           editNameForm.classList.add('hidden');
           nameContainer.classList.remove('hidden');
         } catch (error) {
@@ -209,22 +220,23 @@ import Sidebar from '../components/Sidebar.astro';
       });
     }
 
-    // --- MISE À JOUR DE L'AVATAR ---
-    const avatarPreview = document.getElementById('avatar-preview');
-    const avatarDefault = document.getElementById('avatar-default');
+    const avatarPreview = document.getElementById('avatar-preview') as HTMLImageElement;
+    const avatarDefault = document.getElementById('avatar-default') as HTMLElement;
+    
     if (user.avatar && avatarPreview && avatarDefault) {
       avatarPreview.src = pb.files.getUrl(user, user.avatar);
       avatarPreview.classList.remove('hidden');
       avatarDefault.classList.add('hidden');
     }
 
-    // --- LOGIQUE UPLOAD PHOTO ---
-    const container = document.getElementById('avatar-container');
-    const input = document.getElementById('avatar-upload');
+    const container = document.getElementById('avatar-container') as HTMLElement;
+    const input = document.getElementById('avatar-upload') as HTMLInputElement;
+    
     if (container && input) {
       container.addEventListener('click', () => input.click());
-      input.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
+      input.addEventListener('change', async (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        const file = target.files?.[0];
         if (file) {
           const formData = new FormData();
           formData.append('avatar', file);
@@ -238,34 +250,43 @@ import Sidebar from '../components/Sidebar.astro';
       });
     }
 
-    // --- RECUPERATION DES STATS + JAUGE DYNAMIQUE ---
-    try {
-      const stats = await pb.collection('user_stats').getFirstListItem(`user="${user.id}"`);
-      
-      const pcStreak = document.getElementById('pc-streak');
-      const pcRank = document.getElementById('pc-rank');
-      const pcXp = document.getElementById('pc-xp');
-      const mobStreak = document.getElementById('mob-streak');
-      const mobRank = document.getElementById('mob-rank');
-      const mobXp = document.getElementById('mob-xp');
+    const userXp = user.xp || 0; 
+    
+    const pcXp = document.getElementById('pc-xp') as HTMLElement;
+    const mobXp = document.getElementById('mob-xp') as HTMLElement;
+    
+    if (pcXp) pcXp.textContent = userXp;
+    if (mobXp) mobXp.textContent = `${userXp} XP`;
 
-      if(pcStreak) pcStreak.textContent = `${stats.streak_days} Jours`;
-      if(pcRank) pcRank.textContent = stats.rank_tier || 'Débutant';
-      if(pcXp) pcXp.textContent = stats.experience_points;
-      if(mobStreak) mobStreak.textContent = `${stats.streak_days} Jours`;
-      if(mobRank) mobRank.textContent = stats.rank_tier || 'Débutant';
-      if(mobXp) mobXp.textContent = `${stats.experience_points} exp`;
-
-      const xpGoal = 1000;
-      const progressPercentage = Math.min((stats.experience_points / xpGoal) * 100, 100);
-      const xpBar = document.getElementById('xp-bar');
-      if (xpBar) xpBar.style.width = `${progressPercentage}%`;
-
-    } catch (error) {
-      console.log("Initialisation des stats à zéro");
-      const xpBar = document.getElementById('xp-bar');
-      if (xpBar) xpBar.style.width = '0%';
+    const currentLevel = Math.floor(userXp / 1000);
+    const currentLevelXp = userXp % 1000;
+    
+    const progressPercentage = Math.min((currentLevelXp / 1000) * 100, 100);
+    const xpBar = document.getElementById('xp-bar') as HTMLElement;
+    
+    if (xpBar) {
+        xpBar.style.width = `${progressPercentage}%`;
     }
+
+    const userStreak = user.streak || 0;
+    
+    const pcStreak = document.getElementById('pc-streak') as HTMLElement;
+    const mobStreak = document.getElementById('mob-streak') as HTMLElement;
+    
+    if (pcStreak) pcStreak.textContent = `${userStreak} Jours`;
+    if (mobStreak) mobStreak.textContent = `${userStreak} Jours`;
+
+    const pcRank = document.getElementById('pc-rank') as HTMLElement;
+    const mobRank = document.getElementById('mob-rank') as HTMLElement;
+    
+    let rankName = "Apprenti";
+    if (userXp >= 1000) rankName = "Initié";
+    if (userXp >= 3000) rankName = "Explorateur";
+    if (userXp >= 5000) rankName = "Expert";
+    if (userXp >= 10000) rankName = "Maître";
+
+    if (pcRank) pcRank.textContent = rankName;
+    if (mobRank) mobRank.textContent = rankName;
   };
 
   loadProfileData();

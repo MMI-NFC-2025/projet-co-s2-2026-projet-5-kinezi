@@ -1,0 +1,177 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/SiteHeader.astro'; 
+import Menu from '../components/Menu.astro';     
+import Sidebar from '../components/Sidebar.astro'; 
+---
+
+<Layout title="Contact | Kinezi">
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-12 pb-24 px-6 relative flex flex-col items-center overflow-x-hidden">
+    
+    <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-[#A898EE]/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+
+    <div class="w-full max-w-[700px] relative z-10 animate-slide-up">
+      
+      <div class="w-full flex items-center justify-start mb-8">
+        <button 
+          onclick="history.back()" 
+          class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-3xl md:text-5xl font-black text-gray-900 tracking-tight">
+          Nous contacter
+        </h1>
+      </div>
+
+      <div class="bg-white rounded-[2rem] p-6 md:p-10 shadow-[0_15px_40px_rgba(140,23,248,0.1)] border border-gray-100 relative overflow-hidden">
+        
+        <!-- MESSAGE DE SUCCÈS (Caché par défaut, et n'est plus en absolute) -->
+        <div id="success-message" class="hidden flex-col items-center justify-center py-10 text-center animate-fade-in w-full">
+            <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h3 class="text-3xl font-black text-gray-900 mb-2">Message envoyé !</h3>
+            <p class="text-gray-600 font-medium mb-8">
+                Merci de nous avoir contactés. Nous avons bien reçu ton message et nous te répondrons très vite.
+            </p>
+            <a href="/" class="bg-[#8C17F8] text-white px-8 py-3.5 rounded-full font-black text-lg transition-transform hover:-translate-y-1 hover:shadow-lg">
+                Retour à l'accueil
+            </a>
+        </div>
+
+        <!-- FORMULAIRE -->
+        <form id="contact-form" class="flex flex-col gap-5 w-full">
+            
+            <p class="text-gray-600 font-medium mb-2">
+                Un bug ? Une suggestion ? Remplis ce formulaire pour envoyer un message direct à l'équipe.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-5">
+                <div class="flex-1 flex flex-col gap-1.5">
+                    <label for="name" class="text-sm font-bold text-gray-700 ml-1">Ton prénom</label>
+                    <input type="text" id="name" required placeholder="Ex: Enzo" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400" />
+                </div>
+                
+                <div class="flex-1 flex flex-col gap-1.5">
+                    <label for="email" class="text-sm font-bold text-gray-700 ml-1">Ton adresse email</label>
+                    <input type="email" id="email" required placeholder="exemple@mail.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400" />
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label for="subject" class="text-sm font-bold text-gray-700 ml-1">Sujet de ta demande</label>
+                <select id="subject" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-bold text-gray-900 transition-all appearance-none cursor-pointer">
+                    <option value="" disabled selected>Choisis une option...</option>
+                    <option value="Bug technique">Bug technique</option>
+                    <option value="Suggestion de mini-jeu">Suggestion de fonctionnalité</option>
+                    <option value="Question sur le compte">Question sur mon compte</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label for="message" class="text-sm font-bold text-gray-700 ml-1">Ton message</label>
+                <textarea id="message" required rows="5" placeholder="Explique-nous tout en détail..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400 resize-none"></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn" class="mt-2 w-full bg-[#8C17F8] text-white px-8 py-4 rounded-xl font-black text-lg transition-transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(140,23,248,0.3)] active:scale-95 flex items-center justify-center gap-2">
+                <span>Envoyer le message</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
+            </button>
+
+        </form>
+
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import PocketBase from 'pocketbase';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const pb = new PocketBase('http://127.0.0.1:8090');
+
+    const nameInput = document.getElementById('name') as HTMLInputElement;
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const successMessage = document.getElementById('success-message') as HTMLElement;
+
+    // Pré-remplir les champs si l'utilisateur est connecté
+    if (pb.authStore.isValid && pb.authStore.model) {
+        if (nameInput) nameInput.value = pb.authStore.model.first_name || pb.authStore.model.username || pb.authStore.model.name || '';
+        if (emailInput) emailInput.value = pb.authStore.model.email || '';
+    }
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Bloquer le bouton pendant l'envoi pour éviter les doubles clics
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = "Envoi en cours...";
+                submitBtn.classList.add('opacity-70');
+            }
+
+            const subjectInput = document.getElementById('subject') as HTMLSelectElement;
+            const messageInput = document.getElementById('message') as HTMLTextAreaElement;
+
+            const data = {
+                name: nameInput.value,
+                email: emailInput.value,
+                subject: subjectInput.value,
+                message: messageInput.value
+            };
+
+            try {
+                // Envoi à PocketBase dans la collection "contacts"
+                await pb.collection('contacts').create(data);
+                
+                // Afficher l'écran de succès
+                form.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+                successMessage.classList.add('flex');
+                
+            } catch (error) {
+                console.error("Erreur d'envoi :", error);
+                alert("Une erreur s'est produite lors de l'envoi du message. Vérifie ta connexion.");
+                
+                // Réactiver le bouton
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<span>Envoyer le message</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>`;
+                    submitBtn.classList.remove('opacity-70');
+                }
+            }
+        });
+    }
+  });
+</script>
+
+<style>
+  .animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>

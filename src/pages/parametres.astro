@@ -1,0 +1,124 @@
+<script>
+  import PocketBase from 'pocketbase';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const pb = new PocketBase('http://127.0.0.1:8090');
+
+    // On dit à TypeScript de ne pas s'inquiéter pour le type du modèle
+    const currentUser: any = pb.authStore.model;
+
+    // --- NOTIFICATIONS TOGGLE ---
+    const notifBtn = document.getElementById('btn-notifications');
+    const notifToggleBg = document.getElementById('toggle-bg-notifications');
+    
+    let notifsEnabled = false;
+    if (pb.authStore.isValid && currentUser) {
+        notifsEnabled = currentUser.wants_emails === true;
+    }
+
+    const updateNotifUI = () => {
+      if (!notifToggleBg) return;
+      if (notifsEnabled) {
+        notifToggleBg.classList.replace('bg-[#E5E5E5]', 'bg-[#A898EE]');
+        notifToggleBg.classList.replace('border-gray-200', 'border-[#A898EE]');
+        notifToggleBg.classList.replace('justify-start', 'justify-end');
+      } else {
+        notifToggleBg.classList.replace('bg-[#A898EE]', 'bg-[#E5E5E5]');
+        notifToggleBg.classList.replace('border-[#A898EE]', 'border-gray-200');
+        notifToggleBg.classList.replace('justify-end', 'justify-start');
+      }
+    };
+
+    if (notifBtn && pb.authStore.isValid && currentUser) {
+      updateNotifUI(); 
+      
+      notifBtn.addEventListener('click', async () => {
+        notifsEnabled = !notifsEnabled;
+        updateNotifUI(); 
+        
+        try {
+            // L'erreur TypeScript venait d'ici, maintenant currentUser est sécurisé
+            const updatedUser = await pb.collection('users').update(currentUser.id, {
+                wants_emails: notifsEnabled
+            });
+            
+            const authData = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}');
+            authData.model = updatedUser;
+            localStorage.setItem('pocketbase_auth', JSON.stringify(authData));
+
+            if (notifsEnabled && "Notification" in window) {
+              Notification.requestPermission();
+            }
+        } catch (error) {
+            console.error("Erreur sauvegarde notifications :", error);
+            notifsEnabled = !notifsEnabled;
+            updateNotifUI();
+        }
+      });
+    }
+
+    // --- ABONNEMENT ---
+    const subBtn = document.getElementById('btn-abonnement');
+    if (subBtn) {
+      subBtn.addEventListener('click', () => {
+        alert("La fonctionnalité d'abonnement sera bientôt disponible !");
+      });
+    }
+
+    // --- SUPPRESSION DE COMPTE ---
+    const deleteBtn = document.getElementById('btn-delete');
+    const deleteModal = document.getElementById('delete-modal');
+    const modalContent = document.getElementById('delete-modal-content');
+    const cancelDelete = document.getElementById('cancel-delete');
+    const confirmDelete = document.getElementById('confirm-delete');
+
+    if (deleteBtn && deleteModal && modalContent && cancelDelete && confirmDelete) {
+      
+      deleteBtn.addEventListener('click', () => {
+        deleteModal.classList.remove('hidden');
+        setTimeout(() => {
+          modalContent.classList.remove('scale-95', 'opacity-0');
+          modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+      });
+
+      const closeModal = () => {
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          deleteModal.classList.add('hidden');
+        }, 300);
+      };
+
+      cancelDelete.addEventListener('click', closeModal);
+      deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) closeModal();
+      });
+
+      confirmDelete.addEventListener('click', async () => {
+        if (!pb.authStore.isValid || !currentUser) {
+            window.location.href = '/login-mail';
+            return;
+        }
+        
+        try {
+            confirmDelete.innerText = "Suppression...";
+            confirmDelete.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            await pb.collection('users').delete(currentUser.id);
+            
+            pb.authStore.clear();
+            localStorage.removeItem('pocketbase_auth');
+            window.location.href = '/login-mail'; 
+            
+        } catch (error) {
+            console.error("Erreur lors de la suppression :", error);
+            alert("Une erreur est survenue lors de la suppression de ton compte. Réessaie plus tard.");
+            closeModal();
+            confirmDelete.innerText = "Oui, supprimer";
+            confirmDelete.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      });
+    }
+  });
+</script>

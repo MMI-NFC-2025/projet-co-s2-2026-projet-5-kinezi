@@ -1,0 +1,404 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/SiteHeader.astro'; 
+import Menu from '../../../components/Menu.astro';     
+import Sidebar from '../../../components/Sidebar.astro'; 
+import PocketBase from 'pocketbase';
+
+export async function getStaticPaths() {
+  const pb = new PocketBase('http://127.0.0.1:8090');
+  const categories = await pb.collection('categories').getFullList();
+  
+  return categories.map((cat) => ({
+    params: { id: cat.slug || cat.id },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+let lessons: any[] = [];
+try {
+  lessons = await pb.collection('lessons').getFullList({
+    filter: `category = "${category.id}"`,
+  });
+} catch (error) {
+  console.error("Erreur de récupération des leçons :", error);
+}
+---
+
+<Layout title={`Swipe Signe - ${category.title} | Kinezi`}>
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-8 pb-24 px-6 relative flex flex-col items-center overflow-x-hidden">
+    
+    <div class="w-full max-w-[1000px] relative z-10 flex flex-col items-center">
+      
+      <div class="w-full flex items-center justify-start mb-4 animate-fade-in">
+        <button 
+          onclick="history.back()" 
+          class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+          {category.title}
+        </h1>
+      </div>
+
+      <div class="text-center mb-10 animate-fade-in" style="animation-delay: 100ms; opacity: 0; animation-fill-mode: forwards;">
+        <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-3">
+          Swipe Signe
+        </h2>
+        <div class="inline-block bg-gray-100 text-gray-500 px-5 py-1.5 rounded-full font-bold text-sm tracking-wide shadow-sm">
+          <span id="current-count">1</span> / <span id="total-count">10</span>
+        </div>
+      </div>
+
+      <div class="w-full max-w-[400px] relative h-[550px] animate-slide-up" style="animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards;">
+        
+        <div id="swipe-deck" class="absolute inset-0">
+          {/* Les cartes seront injectées ici */}
+        </div>
+
+        <div id="end-screen" class="hidden w-full max-w-[420px] mx-auto flex-col bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(140,23,248,0.2)] border border-gray-100 z-50 overflow-hidden animate-slide-up mt-4">
+          
+          <div class="bg-gradient-to-br from-[#A898EE] to-[#8C17F8] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-white/10 w-full h-full" style="background-image: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2) 0%, transparent 70%);"></div>
+            <span class="text-6xl drop-shadow-xl mb-4 relative z-10">👆</span>
+            <h3 class="text-3xl md:text-4xl font-black text-white tracking-tight relative z-10 drop-shadow-sm">Cartes terminées</h3>
+            <p class="text-white/90 font-bold mt-2 relative z-10 text-lg">Bilan de tes choix</p>
+          </div>
+
+          <div class="p-6 md:p-8 flex flex-col gap-4 bg-white">
+            <div class="w-full flex justify-between items-center bg-[#F4F0FF] rounded-2xl p-5 border border-white shadow-sm transition-transform hover:scale-[1.02]">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🎯</span>
+                <span class="text-gray-600 font-bold text-lg">Score</span>
+              </div>
+              <div class="text-3xl font-black text-[#8C17F8] tracking-tight">
+                <span id="final-score">0</span><span class="text-xl text-gray-400">/10</span>
+              </div>
+            </div>
+
+            <div class="w-full flex justify-between items-center bg-[#FFF8E7] rounded-2xl p-5 border border-[#FFE8A1] shadow-sm transition-transform hover:scale-[1.02]">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">⚡</span>
+                <span class="text-[#D4A017] font-bold text-lg">Expérience</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-3xl font-black text-[#F59E0B] drop-shadow-sm tabular-nums tracking-tight">+<span id="earned-xp-display">0</span></span>
+                <span class="text-xl font-bold text-[#F59E0B]">XP</span>
+              </div>
+            </div>
+
+            <div class="max-h-[250px] overflow-y-auto custom-scrollbar pr-2 mt-2">
+               <div id="results-list" class="flex flex-col gap-3"></div>
+            </div>
+          </div>
+          
+          <div class="px-6 pb-8 pt-2">
+            <a href={`/jeux/${category.slug || category.id}/enchainement`} class="group relative flex justify-center items-center w-full bg-[#8C17F8] text-white px-8 py-4 rounded-2xl font-black text-xl overflow-hidden shadow-[0_10px_20px_rgba(140,23,248,0.25)] transition-all hover:scale-[1.02] hover:shadow-[0_15px_30px_rgba(140,23,248,0.4)] active:scale-95">
+               <span class="relative z-10 flex items-center">
+                 Continuer
+                 <svg class="w-6 h-6 ml-2 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+               </span>
+               <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    
+    <input type="hidden" id="lessons-data" value={JSON.stringify(lessons)} />
+  </main>
+</Layout>
+
+<script>
+  import { addXp } from '../../../utils/xp';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const lessonsDataInput = document.getElementById('lessons-data') as HTMLInputElement;
+    if (!lessonsDataInput) return;
+    
+    const lessons = JSON.parse(lessonsDataInput.value);
+
+    const deck = document.getElementById('swipe-deck');
+    const TOTAL = Math.min(10, lessons.length);
+    let currentCardIndex = 1;
+    let userAnswers: any[] = []; 
+    
+    const totalCountEl = document.getElementById('total-count');
+    if(totalCountEl) totalCountEl.innerText = TOTAL.toString();
+
+    if (!lessons || lessons.length === 0) {
+      if(deck) deck.innerHTML = '<p class="text-center text-gray-500 mt-10 font-medium">Aucun signe disponible dans cette catégorie.</p>';
+      return;
+    }
+
+    // Création des cartes
+    for (let i = 0; i < TOTAL; i++) {
+      const real = lessons[Math.floor(Math.random() * lessons.length)];
+      let isMatch = true;
+      let text = real.title;
+
+      if (Math.random() > 0.5 && lessons.length > 1) {
+          let fakeLesson;
+          do {
+              fakeLesson = lessons[Math.floor(Math.random() * lessons.length)];
+          } while (fakeLesson.title === real.title);
+          text = fakeLesson.title;
+          isMatch = false;
+      }
+
+      const url = `http://127.0.0.1:8090/api/files/${real.collectionId}/${real.id}/${real.video}`;
+
+      const card = document.createElement('div');
+      card.className = "swipe-card absolute top-0 left-0 w-full h-full bg-white rounded-[2rem] border border-gray-100 flex flex-col overflow-hidden origin-bottom";
+      card.style.zIndex = (TOTAL - i).toString();
+      card.style.touchAction = "none"; 
+
+      card.dataset.realTitle = real.title;
+      card.dataset.shownTitle = text;
+      card.dataset.isMatch = isMatch.toString();
+
+      card.innerHTML = `
+        <div class="flex-1 p-3 pb-0 relative">
+          <div class="w-full h-full rounded-[1.5rem] overflow-hidden bg-gray-50 relative">
+            
+            <div class="stamp-like absolute top-6 left-6 z-20 opacity-0 border-[6px] border-[#4ade80] rounded-2xl px-4 py-2 flex items-center justify-center -rotate-[15deg] bg-white/20 backdrop-blur-sm shadow-sm">
+              <svg class="w-12 h-12 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            
+            <div class="stamp-nope absolute top-6 right-6 z-20 opacity-0 border-[6px] border-[#f87171] rounded-2xl px-4 py-2 flex items-center justify-center rotate-[15deg] bg-white/20 backdrop-blur-sm shadow-sm">
+              <svg class="w-12 h-12 text-[#f87171]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </div>
+
+            <div class="overlay-like absolute inset-0 bg-[#4ade80]/20 z-10 opacity-0 pointer-events-none transition-none"></div>
+            <div class="overlay-nope absolute inset-0 bg-[#f87171]/20 z-10 opacity-0 pointer-events-none transition-none"></div>
+
+            <video src="${url}" loop muted playsinline preload="auto" class="w-full h-full object-cover pointer-events-none"></video>
+            <div class="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] pointer-events-none rounded-[1.5rem]"></div>
+          </div>
+        </div>
+        
+        <div class="h-28 flex flex-col items-center justify-center px-6 pb-2 shrink-0 relative bg-white z-20">
+          <span class="text-3xl font-black text-[#8C17F8] leading-tight text-center line-clamp-2">${text}</span>
+          <div class="w-10 h-1.5 bg-gray-200 rounded-full mt-4 opacity-50"></div>
+        </div>
+      `;
+      if(deck) deck.appendChild(card);
+    }
+
+    function updateDeckVisuals() {
+      if(!deck) return;
+      const cards = Array.from(deck.children) as HTMLElement[];
+      cards.forEach((card, index) => {
+        card.style.transition = "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease, box-shadow 0.4s ease";
+        if (index === 0) {
+          card.style.transform = "translateY(0px) scale(1)";
+          card.style.opacity = "1";
+          card.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+        } else if (index === 1) {
+          card.style.transform = "translateY(16px) scale(0.95)";
+          card.style.opacity = "1";
+          card.style.boxShadow = "none";
+        } else if (index === 2) {
+          card.style.transform = "translateY(32px) scale(0.90)";
+          card.style.opacity = "0.6";
+          card.style.boxShadow = "none";
+        } else {
+          card.style.transform = "translateY(48px) scale(0.85)";
+          card.style.opacity = "0";
+          card.style.boxShadow = "none";
+        }
+      });
+    }
+
+    function showEndScreen() {
+      const endScreen = document.getElementById('end-screen');
+      const scoreContainer = document.getElementById('final-score');
+      const resultsList = document.getElementById('results-list');
+      const xpDisplay = document.getElementById('earned-xp-display');
+
+      if (deck) deck.style.display = 'none';
+
+      const correctCount = userAnswers.filter(a => a.userCorrect).length;
+      if(scoreContainer) scoreContainer.innerText = correctCount.toString();
+
+      // Calcul et ajout de l'XP (10 XP par bonne réponse)
+      const totalXp = correctCount * 10;
+      if (xpDisplay) xpDisplay.innerText = totalXp.toString();
+      addXp(totalXp);
+
+      if(resultsList) {
+          resultsList.innerHTML = userAnswers.map((ans, index) => {
+            let subtitle = "";
+            if (!ans.userCorrect) {
+               if (ans.swipedRight) {
+                 subtitle = `<span class="text-red-500 font-bold">Faux</span> (La vidéo montrait : ${ans.realTitle})`;
+               } else {
+                 subtitle = `<span class="text-red-500 font-bold">Faux</span> (C'était bien le signe ${ans.shownTitle})`;
+               }
+            } else {
+               subtitle = `<span class="text-green-500 font-bold">Correct !</span>`;
+            }
+
+            const iconSVG = ans.userCorrect 
+              ? `<div class="flex items-center justify-center w-10 h-10 rounded-full bg-[#4ade80]/20 text-[#4ade80] ml-3 shrink-0 shadow-sm border border-[#4ade80]/30">
+                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                 </div>`
+              : `<div class="flex items-center justify-center w-10 h-10 rounded-full bg-[#f87171]/20 text-[#f87171] ml-3 shrink-0 shadow-sm border border-[#f87171]/30">
+                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                 </div>`;
+
+            return `
+            <div class="flex items-center justify-between p-4 rounded-[1rem] ${ans.userCorrect ? 'bg-[#4ade80]/10 border border-[#4ade80]/20' : 'bg-[#f87171]/10 border border-[#f87171]/20'} animate-fade-in" style="animation-delay: ${index * 50}ms; opacity: 0; animation-fill-mode: forwards;">
+               <div class="flex flex-col pr-2">
+                  <span class="font-black text-gray-900 text-lg">${ans.shownTitle}</span>
+                  <span class="text-xs font-medium text-gray-600 mt-0.5 leading-snug">${subtitle}</span>
+               </div>
+               ${iconSVG}
+            </div>
+            `;
+          }).join('');
+      }
+
+      if(endScreen) endScreen.classList.replace('hidden', 'flex');
+    }
+
+    function updateActiveVideo() {
+      if(!deck) return;
+      const cards = Array.from(document.querySelectorAll('.swipe-card'));
+      const activeCard = deck.firstElementChild;
+      
+      cards.forEach(c => (c.querySelector('video') as HTMLVideoElement)?.pause());
+      if (activeCard) {
+        const vid = activeCard.querySelector('video') as HTMLVideoElement;
+        vid?.play().catch(e => console.log("Autoplay attend interaction"));
+      } else {
+        showEndScreen(); 
+      }
+    }
+
+    let isDragging = false;
+    let startX = 0;
+    let currentCard: HTMLElement | null = null;
+    let likeStamp: HTMLElement | null, nopeStamp: HTMLElement | null, likeOverlay: HTMLElement | null, nopeOverlay: HTMLElement | null;
+
+    if(deck) {
+        deck.addEventListener('pointerdown', (e) => {
+          currentCard = deck.firstElementChild as HTMLElement;
+          if(!currentCard) return;
+          
+          isDragging = true;
+          startX = e.pageX;
+          currentCard.style.transition = "none";
+          
+          likeStamp = currentCard.querySelector('.stamp-like');
+          nopeStamp = currentCard.querySelector('.stamp-nope');
+          likeOverlay = currentCard.querySelector('.overlay-like');
+          nopeOverlay = currentCard.querySelector('.overlay-nope');
+        });
+    }
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDragging || !currentCard) return;
+      const moveX = e.pageX - startX;
+      currentCard.style.transform = `translateX(${moveX}px) rotate(${moveX/25}deg) scale(1)`;
+
+      const opacity = Math.min(Math.abs(moveX) / 120, 1);
+
+      if (moveX > 0) { 
+        if(likeStamp) likeStamp.style.opacity = opacity.toString();
+        if(likeOverlay) likeOverlay.style.opacity = opacity.toString();
+        if(nopeStamp) nopeStamp.style.opacity = '0';
+        if(nopeOverlay) nopeOverlay.style.opacity = '0';
+      } else { 
+        if(nopeStamp) nopeStamp.style.opacity = opacity.toString();
+        if(nopeOverlay) nopeOverlay.style.opacity = opacity.toString();
+        if(likeStamp) likeStamp.style.opacity = '0';
+        if(likeOverlay) likeOverlay.style.opacity = '0';
+      }
+    });
+
+    window.addEventListener('pointerup', (e) => {
+      if (!isDragging || !currentCard) return;
+      isDragging = false;
+      const moveX = e.pageX - startX;
+      
+      if (Math.abs(moveX) > 100) {
+        
+        const isSwipeRight = moveX > 0;
+        const isMatch = currentCard.dataset.isMatch === 'true';
+        const isUserCorrect = (isSwipeRight && isMatch) || (!isSwipeRight && !isMatch);
+
+        userAnswers.push({
+            shownTitle: currentCard.dataset.shownTitle,
+            realTitle: currentCard.dataset.realTitle,
+            isMatch: isMatch,
+            userCorrect: isUserCorrect,
+            swipedRight: isSwipeRight
+        });
+
+        currentCard.style.transition = "0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+        currentCard.style.transform = `translateX(${(moveX > 0 ? 1 : -1) * window.innerWidth}px) rotate(${(moveX > 0 ? 1 : -1) * 30}deg)`;
+        
+        const cardToRemove = currentCard;
+        setTimeout(() => { 
+          cardToRemove.remove(); 
+          
+          if (currentCardIndex < TOTAL) {
+            currentCardIndex++;
+            const currentCountEl = document.getElementById('current-count');
+            if(currentCountEl) currentCountEl.innerText = currentCardIndex.toString();
+          }
+
+          updateActiveVideo(); 
+          updateDeckVisuals(); 
+        }, 300);
+
+      } else {
+        if(likeStamp) likeStamp.style.transition = "opacity 0.3s ease";
+        if(nopeStamp) nopeStamp.style.transition = "opacity 0.3s ease";
+        if(likeOverlay) likeOverlay.style.transition = "opacity 0.3s ease";
+        if(nopeOverlay) nopeOverlay.style.transition = "opacity 0.3s ease";
+        
+        if(likeStamp) likeStamp.style.opacity = '0';
+        if(nopeStamp) nopeStamp.style.opacity = '0';
+        if(likeOverlay) likeOverlay.style.opacity = '0';
+        if(nopeOverlay) nopeOverlay.style.opacity = '0';
+
+        setTimeout(() => {
+          if(likeStamp) likeStamp.style.transition = "none";
+          if(nopeStamp) nopeStamp.style.transition = "none";
+          if(likeOverlay) likeOverlay.style.transition = "none";
+          if(nopeOverlay) nopeOverlay.style.transition = "none";
+        }, 300);
+
+        updateDeckVisuals(); 
+      }
+    });
+
+    updateDeckVisuals();
+    updateActiveVideo();
+  });
+</script>
+
+<style is:global>
+  .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #E8E8E8; border-radius: 10px; }
+</style>

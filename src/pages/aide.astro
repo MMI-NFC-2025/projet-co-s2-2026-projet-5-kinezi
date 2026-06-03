@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/SiteHeader.astro'; 
+import Menu from '../components/Menu.astro';     
+import Sidebar from '../components/Sidebar.astro'; 
+---
+
+<Layout title="Aide & FAQ | Kinezi">
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-12 pb-24 px-6 relative flex flex-col items-center overflow-x-hidden">
+    
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#A898EE]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#8C17F8]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 pointer-events-none"></div>
+
+    <div class="w-full max-w-[800px] relative z-10 animate-slide-up">
+      
+      <div class="w-full flex items-center justify-start mb-8">
+        <button 
+          onclick="history.back()" 
+          class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-3xl md:text-5xl font-black text-gray-900 tracking-tight">
+          Besoin d'aide ?
+        </h1>
+      </div>
+
+      <p class="text-gray-600 text-lg mb-8 font-medium px-2">
+        Trouve les réponses à tes questions pour profiter au maximum de l'expérience Kinezi.
+      </p>
+
+      <div class="flex flex-col gap-4 mb-12">
+        
+        <details class="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+          <summary class="flex justify-between items-center font-black cursor-pointer list-none p-5 text-gray-800 text-lg">
+            <span>📹 La caméra ne fonctionne pas dans le jeu "Imitation"</span>
+            <span class="transition group-open:rotate-180 text-[#8C17F8]">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-gray-600 px-5 pb-5 pt-0 font-medium leading-relaxed border-t border-gray-50 mt-2">
+            Le jeu d'Imitation utilise une Intelligence Artificielle qui a besoin de voir tes mains. Assure-toi d'avoir <strong>autorisé ton navigateur à accéder à ta webcam</strong>. Si ça ne marche toujours pas, vérifie qu'aucune autre application (comme Zoom ou Discord) n'utilise déjà ta caméra.
+          </div>
+        </details>
+
+        <details class="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+          <summary class="flex justify-between items-center font-black cursor-pointer list-none p-5 text-gray-800 text-lg">
+            <span>⚡ Comment gagner de l'XP ?</span>
+            <span class="transition group-open:rotate-180 text-[#8C17F8]">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-gray-600 px-5 pb-5 pt-0 font-medium leading-relaxed border-t border-gray-50 mt-2">
+            Tu gagnes de l'expérience (XP) à chaque fois que tu termines un mini-jeu (Memory, Swipe, Dactylo, etc.). <strong>Plus tu es rapide et précis, plus tu gagnes de points bonus !</strong> Ton XP totale te permet de monter en grade et d'apparaître dans le classement général.
+          </div>
+        </details>
+
+        <details class="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+          <summary class="flex justify-between items-center font-black cursor-pointer list-none p-5 text-gray-800 text-lg">
+            <span>🏆 Comment fonctionne le classement ?</span>
+            <span class="transition group-open:rotate-180 text-[#8C17F8]">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-gray-600 px-5 pb-5 pt-0 font-medium leading-relaxed border-t border-gray-50 mt-2">
+            Le classement affiche les meilleurs joueurs de Kinezi en temps réel. Il est trié du joueur ayant le plus grand nombre d'XP jusqu'au plus petit. Continue de t'entraîner pour décrocher la première place et la médaille d'or !
+          </div>
+        </details>
+
+        <details class="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+          <summary class="flex justify-between items-center font-black cursor-pointer list-none p-5 text-gray-800 text-lg">
+            <span>👤 Comment modifier mon profil (Nom, Photo) ?</span>
+            <span class="transition group-open:rotate-180 text-[#8C17F8]">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-gray-600 px-5 pb-5 pt-0 font-medium leading-relaxed border-t border-gray-50 mt-2">
+            Rends-toi sur la page <strong>Profil</strong> depuis le menu. Tu pourras cliquer sur l'icône de crayon à côté de ton prénom pour le modifier. Pour changer ton avatar, clique simplement sur ta photo de profil actuelle.
+          </div>
+        </details>
+
+      </div>
+
+      <div class="bg-[#F4F0FF] rounded-3xl p-8 text-center border border-[#EAE4FF] shadow-inner relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-[#8C17F8]/10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2"></div>
+        <h3 class="text-2xl font-black text-gray-900 mb-3 relative z-10">Tu n'as pas trouvé ta réponse ?</h3>
+        <p class="text-gray-600 font-medium mb-6 relative z-10">
+          Si tu rencontres un bug technique ou que tu as une suggestion pour améliorer l'application, n'hésite pas à nous contacter.
+        </p>
+        <a href="/contact" class="inline-flex items-center justify-center bg-[#8C17F8] text-white px-8 py-3.5 rounded-full font-black text-lg transition-transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(140,23,248,0.3)] active:scale-95 relative z-10">
+        Nous contacter
+        </a>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Cache la flèche par défaut de la balise summary sur les navigateurs Webkit */
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

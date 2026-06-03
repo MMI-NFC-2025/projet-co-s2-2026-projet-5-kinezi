@@ -1,0 +1,149 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/SiteHeader.astro'; 
+import Menu from '../../../components/Menu.astro';     
+import Sidebar from '../../../components/Sidebar.astro'; 
+import PocketBase from 'pocketbase';
+
+export async function getStaticPaths() {
+  const pb = new PocketBase('http://127.0.0.1:8090');
+  const categories = await pb.collection('categories').getFullList();
+  
+  return categories.map((cat) => ({
+    params: { id: cat.slug || cat.id },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+// CORRECTION DE L'ERREUR TYPESCRIPT ICI : ajout de ": any[]"
+let lessons: any[] = [];
+try {
+  lessons = await pb.collection('lessons').getFullList({
+    filter: `category = "${category.id}"`,
+    sort: 'order',
+  });
+} catch (error) {
+  console.error("Erreur de récupération des leçons :", error);
+}
+
+const choixText = category.title.toLowerCase().includes('alphabet') ? 'Lettre au choix' : 'Signe au choix';
+const instructionText = category.title.toLowerCase().includes('alphabet') ? 'Choisir une lettre :' : 'Choisir un signe :';
+---
+
+<Layout title={`${choixText} - ${category.title} | Kinezi`}>
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-8 pb-12 px-6 relative flex flex-col items-center overflow-x-hidden">
+    
+    <div class="w-full max-w-[1000px] relative z-10 flex flex-col items-center">
+      
+      <div class="w-full flex items-center justify-start mb-4 animate-fade-in">
+        <button 
+          onclick="history.back()" 
+          class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+          {category.title}
+        </h1>
+      </div>
+
+      <div class="text-center mb-10 animate-fade-in" style="animation-delay: 100ms; opacity: 0; animation-fill-mode: forwards;">
+        <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
+          {choixText}
+        </h2>
+      </div>
+
+      <div class="w-full max-w-[750px] mx-auto flex flex-col items-start animate-slide-up" style="animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards;">
+        
+        <p class="text-gray-900 font-black text-lg md:text-xl mb-3 ml-2">{instructionText}</p>
+
+        <div class="w-full bg-[#A898EE] rounded-[2rem] p-6 md:p-8 flex flex-col items-center shadow-sm">
+          
+          {lessons.length === 0 ? (
+            <p class="text-center text-gray-500 py-8 bg-white rounded-2xl w-full">Aucune lettre trouvée. Ajoute-les dans PocketBase !</p>
+          ) : (
+            <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-8 w-full">
+              {lessons.map((lesson) => (
+                <button
+                  class="letter-btn w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-[#E8E8E8] text-gray-900 font-black text-xl md:text-2xl flex items-center justify-center transition-all duration-200 hover:bg-[#8C17F8] hover:text-white"
+                  data-slug={lesson.slug || lesson.id}
+                >
+                  {lesson.title}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div class="flex justify-center w-full">
+            <a 
+              id="start-btn" 
+              href="#" 
+              class="opacity-50 pointer-events-none w-full max-w-[300px] bg-[#8C17F8] text-white text-xl font-bold py-3 md:py-4 rounded-xl text-center shadow-[0_4px_15px_rgba(140,23,248,0.3)] transition-all duration-300"
+            >
+              C'est parti !
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    
+    <input type="hidden" id="category-slug" value={category.slug || category.id} />
+  </main>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.letter-btn');
+    const startBtn = document.getElementById('start-btn') as HTMLAnchorElement;
+    const categorySlug = (document.getElementById('category-slug') as HTMLInputElement).value;
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => {
+          b.classList.remove('bg-[#8C17F8]', 'text-white', 'scale-110', 'shadow-md');
+          b.classList.add('bg-[#E8E8E8]', 'text-gray-900');
+        });
+
+        btn.classList.remove('bg-[#E8E8E8]', 'text-gray-900');
+        btn.classList.add('bg-[#8C17F8]', 'text-white', 'scale-110', 'shadow-md');
+
+        const lessonId = (btn as HTMLElement).dataset.slug;
+        startBtn.classList.remove('opacity-50', 'pointer-events-none');
+        startBtn.classList.add('hover:-translate-y-1', 'hover:shadow-[0_8px_25px_rgba(140,23,248,0.4)]');
+        
+        // L'URL EXACTE QUI CORRIGE LA 404 EST ICI :
+        startBtn.href = `/jeux/${categorySlug}/imitation?sign=${lessonId}`; 
+      });
+    });
+  });
+</script>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+</style>

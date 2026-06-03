@@ -3,13 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/SiteHeader.astro'; 
 import Menu from '../components/Menu.astro';     
 import Sidebar from '../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
+import { pb } from '../lib/pb.js';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const records = await pb.collection('users').getFullList();
 
 let lessons: any[] = [];
 try {
-  // On récupère les leçons pour la bibliothèque
   lessons = await pb.collection('lessons').getFullList({
     sort: 'category,order',
   });
@@ -29,10 +28,10 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
   <Menu />
   <Sidebar />
 
-  <main class="min-h-screen bg-[#F8F9FA] md:ml-20 pt-32 pb-24 px-6 md:px-12">
+  <main class="min-h-screen bg-[#FFFFFF] md:ml-20 pt-8 pb-24 px-6 md:px-12">
     <div class="max-w-[1100px] mx-auto">
       
-      <div class="text-center mb-20">
+      <div class="text-center mb-16">
         <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
           Bibliothèque<br/>
           <span class="text-[#A898EE]">de leçons</span>
@@ -45,24 +44,24 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* @ts-ignore */}
             {categoryLessons.map((lesson) => (
-              <div class="group relative bg-white rounded-3xl p-4 shadow-sm border border-gray-100 transition-all hover:-translate-y-2">
+              <div class="group relative bg-white rounded-3xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_32px_rgba(140,23,248,0.18)]">
                 
-                <div class="w-full aspect-square bg-[#A898EE]/5 rounded-2xl flex items-center justify-center mb-5 relative overflow-hidden">
+                <div class="w-full aspect-square bg-[#A898EE]/5 rounded-2xl flex items-center justify-center mb-5 relative">
                   <a href={`/lecon/${lesson.id}`} class="absolute inset-0 z-10"></a>
                   
                   <button 
                     data-id={lesson.id} 
-                    class="lib-like-btn absolute top-3 right-3 z-30 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-300 hover:text-[#8C17F8] hover:scale-110 transition-all shadow-md"
+                    class="lib-like-btn absolute top-3 right-3 z-20 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-300 hover:text-[#8C17F8] hover:scale-110 transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
                   >
-                    <svg class="w-6 h-6 pointer-events-none fill-none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <svg class="w-6 h-6 pointer-events-none fill-none transition-colors duration-300" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
                     </svg>
                   </button>
 
-                  <span class="text-5xl">{lesson.emoji || '📖'}</span>
+                  <span class="text-5xl pointer-events-none">{lesson.emoji || '📖'}</span>
                 </div>
 
-                <h3 class="text-xl font-black text-gray-900 px-2">{lesson.title}</h3>
+                <h3 class="text-xl font-black text-gray-900 px-2 group-hover:text-[#8C17F8] transition-colors duration-300">{lesson.title}</h3>
               </div>
             ))}
           </div>
@@ -78,17 +77,15 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
   const start = async () => {
     const pb = new PocketBase('http://127.0.0.1:8090');
     
-    // On vérifie si l'utilisateur est connecté
     if (!pb.authStore.isValid || !pb.authStore.model) return;
     
     const userId = pb.authStore.model.id;
     const btns = document.querySelectorAll('.lib-like-btn');
 
     try {
-      // 1. On charge les favoris depuis la base de données
       const favs = await pb.collection('favorites').getFullList({ 
         filter: `user="${userId}"`,
-        $autoCancel: false // Évite que PocketBase annule la requête
+        $autoCancel: false
       });
       
       const favMap = new Map();
@@ -99,7 +96,6 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
         const svg = btn.querySelector('svg');
         if (!lessonId || !svg) return;
 
-        // 2. ÉTAT INITIAL : Si la leçon est dans les favoris, on colore le cœur
         if (favMap.has(lessonId)) {
           btn.setAttribute('data-fav-id', favMap.get(lessonId));
           btn.classList.remove('text-gray-300');
@@ -107,7 +103,6 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
           svg.classList.add('fill-current');
           svg.classList.remove('fill-none');
         } else {
-          // Sécurité : on remet en gris si ce n'est pas un favori
           btn.removeAttribute('data-fav-id');
           btn.classList.add('text-gray-300');
           btn.classList.remove('text-[#8C17F8]');
@@ -115,11 +110,10 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
           svg.classList.add('fill-none');
         }
 
-        // 3. GESTION DU CLIC (Supprimé les anciens écouteurs pour éviter les doublons)
-        btn.replaceWith(btn.cloneNode(true));
-        const newBtn = document.querySelector(`[data-id="${lessonId}"]`);
+        const newBtn = btn.cloneNode(true) as HTMLElement;
+        btn.replaceWith(newBtn);
         
-        newBtn?.addEventListener('click', async (e) => {
+        newBtn.addEventListener('click', async (e) => {
           e.preventDefault();
           e.stopPropagation();
           
@@ -127,15 +121,14 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
           const currentSvg = newBtn.querySelector('svg');
 
           if (currentFavId) {
-            // UNLIKE
             newBtn.removeAttribute('data-fav-id');
             newBtn.classList.remove('text-[#8C17F8]');
             newBtn.classList.add('text-gray-300');
             currentSvg?.classList.remove('fill-current');
             currentSvg?.classList.add('fill-none');
+            
             await pb.collection('favorites').delete(currentFavId);
           } else {
-            // LIKE
             newBtn.classList.add('text-[#8C17F8]');
             newBtn.classList.remove('text-gray-300');
             currentSvg?.classList.add('fill-current');
@@ -154,9 +147,6 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
     }
   };
 
-  // --- LA CORRECTION POUR ASTRO ---
-  // On lance au premier chargement
   start();
-  // On relance à chaque changement de page Astro
   document.addEventListener('astro:page-load', start);
 </script>
