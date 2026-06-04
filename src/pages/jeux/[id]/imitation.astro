@@ -1,22 +1,25 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import Header from '../../../components/SiteHeader.astro'; 
-import Menu from '../../../components/Menu.astro';     
-import Sidebar from '../../../components/Sidebar.astro'; 
+import Header from '../../../components/SiteHeader.astro';
+import Menu from '../../../components/Menu.astro';    
+import Sidebar from '../../../components/Sidebar.astro';
 import PocketBase from 'pocketbase';
 
+
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   const categories = await pb.collection('categories').getFullList();
-  
+ 
   return categories.map((cat) => ({
     params: { id: cat.slug || cat.id },
     props: { category: cat },
   }));
 }
 
+
 const { category } = Astro.props;
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
+
 
 let lessons: any[] = [];
 try {
@@ -28,20 +31,23 @@ try {
 }
 ---
 
+
 <Layout title={`Imitation - ${category.title} | Kinezi`}>
-  
+ 
   <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
 
   <Header />
   <Menu />
   <Sidebar />
 
+
   <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-8 pb-24 px-4 md:px-6 relative flex flex-col items-center overflow-x-hidden">
-    
+   
     <div class="w-full max-w-[1000px] relative z-10 flex flex-col items-center">
-      
+     
       <div class="w-full flex items-center justify-start mb-4 animate-fade-in">
         <button onclick="history.back()" class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -51,11 +57,13 @@ try {
         <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">{category.title}</h1>
       </div>
 
+
       <div class="flex justify-center mb-4">
         <div id="timer-badge" class="bg-red-50 text-red-600 px-6 py-2 rounded-full font-black text-lg border-2 border-red-200 animate-pulse">
             Temps : <span id="timer-display">8</span>s
         </div>
       </div>
+
 
       <div class="text-center mb-6 animate-fade-in">
         <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-3">Imitation</h2>
@@ -64,25 +72,26 @@ try {
         </div>
       </div>
 
+
       <div id="game-card" class="w-full max-w-[800px] bg-white border border-gray-100 rounded-[2rem] p-4 md:p-6 shadow-xl relative animate-slide-up">
         <h3 id="sign-title" class="text-[#8C17F8] text-2xl md:text-3xl font-black tracking-wide mb-6 text-center uppercase">Chargement...</h3>
         <div class="flex flex-col md:flex-row gap-4 w-full">
-          
+         
           <div class="flex-1 bg-gray-50 rounded-[1.5rem] overflow-hidden relative shadow-inner aspect-video flex items-center justify-center border border-gray-100">
             <video id="reference-video" src="" loop muted playsinline autoplay class="w-full h-full object-cover"></video>
             <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[#8C17F8] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">Modèle</div>
           </div>
-          
+         
           <div class="flex-1 bg-gray-900 rounded-[1.5rem] overflow-hidden relative shadow-inner aspect-video flex flex-col items-center justify-center">
             <video id="webcam-video" class="hidden" autoplay playsinline></video>
             <canvas id="output-canvas" class="w-full h-full object-cover transform scale-x-[-1]"></canvas>
-            
+           
             <div id="camera-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 text-white z-20">Activation du capteur...</div>
-            
+           
             <div class="absolute bottom-4 left-4 right-4 bg-black/40 backdrop-blur-md rounded-full h-3 overflow-hidden border border-white/10 p-0.5 z-40">
                <div id="ai-progress-bar" class="h-full bg-gradient-to-r from-[#8C17F8] to-[#4ade80] w-0 rounded-full transition-all duration-100 ease-out"></div>
             </div>
-            
+           
             <div id="validation-overlay" class="absolute inset-0 bg-[#4ade80]/40 z-30 opacity-0 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
                 <div class="bg-white p-4 rounded-full shadow-2xl transform scale-50 opacity-0 transition-all duration-500" id="validation-icon">
                     <svg class="w-16 h-16 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
@@ -90,11 +99,13 @@ try {
             </div>
           </div>
 
+
         </div>
       </div>
 
+
       <div id="end-screen" class="hidden w-full max-w-[420px] mx-auto flex-col bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(140,23,248,0.2)] border border-gray-100 z-50 overflow-hidden animate-slide-up mt-4">
-          
+         
         <div class="bg-gradient-to-br from-[#A898EE] to-[#8C17F8] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
           <div class="absolute inset-0 bg-white/10 w-full h-full" style="background-image: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2) 0%, transparent 70%);"></div>
           <span class="text-6xl drop-shadow-xl mb-4 relative z-10">📸</span>
@@ -102,8 +113,9 @@ try {
           <p class="text-white/90 font-bold mt-2 relative z-10 text-lg">Bilan de ta session</p>
         </div>
 
+
         <div class="p-6 md:p-8 flex flex-col gap-4 bg-white">
-          
+         
           <div class="w-full flex justify-between items-center bg-[#F4F0FF] rounded-2xl p-5 border border-white shadow-sm transition-transform hover:scale-[1.02]">
             <div class="flex items-center gap-3">
               <span class="text-2xl">🎯</span>
@@ -113,6 +125,7 @@ try {
               <span id="final-score">0</span><span class="text-xl text-gray-400">/10</span>
             </div>
           </div>
+
 
           <div class="w-full flex justify-between items-center bg-[#FFF8E7] rounded-2xl p-5 border border-[#FFE8A1] shadow-sm transition-transform hover:scale-[1.02]">
             <div class="flex items-center gap-3">
@@ -125,10 +138,12 @@ try {
             </div>
           </div>
 
+
           <div id="results-list" class="mt-2 flex flex-col gap-2 text-center"></div>
 
+
         </div>
-        
+       
         <div class="px-6 pb-8 pt-2">
           <a href={`/jeux/${category.slug || category.id}/enchainement`} class="group relative flex justify-center items-center w-full bg-[#8C17F8] text-white px-8 py-4 rounded-2xl font-black text-xl overflow-hidden shadow-[0_10px_20px_rgba(140,23,248,0.25)] transition-all hover:scale-[1.02] hover:shadow-[0_15px_30px_rgba(140,23,248,0.4)] active:scale-95">
              <span class="relative z-10 flex items-center">
@@ -139,24 +154,29 @@ try {
           </a>
         </div>
 
+
       </div>
 
+
     </div>
-    
+   
     <input type="hidden" id="lessons-data" value={JSON.stringify(lessons)} />
   </main>
 </Layout>
 
+
 <script>
   import { addXp } from '../../../utils/xp';
 
+
   document.addEventListener('DOMContentLoaded', async () => {
-    
+   
     const lessonsDataInput = document.getElementById('lessons-data') as HTMLInputElement;
     if (!lessonsDataInput) return;
-    
+   
     const allLessons = JSON.parse(lessonsDataInput.value);
     const lessons = allLessons.sort(() => 0.5 - Math.random()).slice(0, 10);
+
 
     const titleEl = document.getElementById('sign-title') as HTMLElement;
     const refVideo = document.getElementById('reference-video') as HTMLVideoElement;
@@ -164,30 +184,34 @@ try {
     const timerDisplay = document.getElementById('timer-display') as HTMLElement;
     const totalCountEl = document.getElementById('total-count') as HTMLElement;
     const currentCountEl = document.getElementById('current-count') as HTMLElement;
-    
+   
     const videoElement = document.getElementById('webcam-video') as HTMLVideoElement;
     const canvasElement = document.getElementById('output-canvas') as HTMLCanvasElement;
     const canvasCtx = canvasElement.getContext('2d') as CanvasRenderingContext2D;
 
+
     let currentIndex = 0;
-    let timeLeft = 8; 
+    let timeLeft = 8;
     let timerInterval: number | null = null;
-    
+   
     let userAnswers: string[] = [];
-    let missedSigns: string[] = []; 
-    let totalXp = 0; 
-    
+    let missedSigns: string[] = [];
+    let totalXp = 0;
+   
     let isDetecting = false;
     let detectionProgress = 0;
     let camera: any;
 
+
     if (totalCountEl) totalCountEl.innerText = lessons.length.toString();
+
 
     // --- MATH & RULES ---
     const getDist = (p1: any, p2: any): number => Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow((p1.z || 0) - (p2.z || 0), 2));
     const getNormDist = (l: any, p1: number, p2: number): number => getDist(l[p1], l[p2]) / (getDist(l[0], l[9]) || 1);
-    const isFolded = (l: any, t: number, m: number): boolean => getDist(l[t], l[0]) < getDist(l[m], l[0]) * 1.25; 
+    const isFolded = (l: any, t: number, m: number): boolean => getDist(l[t], l[0]) < getDist(l[m], l[0]) * 1.25;
     const isStr = (l: any, t: number, m: number): boolean => getDist(l[t], l[0]) > getDist(l[m], l[0]) * 0.85;
+
 
     const SignRules: Record<string, (l: any) => boolean> = {
         "a": (l) => isFolded(l,8,5) && isFolded(l,12,9) && isFolded(l,16,13) && isFolded(l,20,17) && getNormDist(l,4,5) < 1.2,
@@ -218,9 +242,11 @@ try {
         "z": (l) => isStr(l,8,5) && isFolded(l,12,9) && isFolded(l,16,13) && isFolded(l,20,17) && isFolded(l,4,2)
     };
 
+
     // @ts-ignore
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
     hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
+
 
     hands.onResults((results: any) => {
       canvasElement.width = videoElement.videoWidth;
@@ -240,7 +266,7 @@ try {
         }
       }
       if (foundMatch) {
-          detectionProgress += 5; 
+          detectionProgress += 5;
           if (progressBar) progressBar.style.width = `${detectionProgress}%`;
           if (detectionProgress >= 100 && isDetecting) { isDetecting = false; triggerValidation(); }
       } else if (detectionProgress > 0) {
@@ -250,17 +276,20 @@ try {
       canvasCtx.restore();
     });
 
+
     // @ts-ignore
     camera = new Camera(videoElement, {
       onFrame: async () => { await hands.send({image: videoElement}); },
       width: 1280, height: 720
     });
 
+
     camera.start().then(() => {
         const loadingEl = document.getElementById('camera-loading');
         if (loadingEl) loadingEl.style.display = 'none';
         loadLesson();
     });
+
 
     function loadLesson() {
       if (timerInterval) clearInterval(timerInterval);
@@ -274,8 +303,9 @@ try {
         if (timeLeft <= 0) { if (timerInterval) clearInterval(timerInterval); nextLesson(false); }
       }, 1000);
       if (titleEl) titleEl.innerText = lessons[currentIndex].title;
-      if (refVideo) refVideo.src = `http://127.0.0.1:8090/api/files/${lessons[currentIndex].collectionId}/${lessons[currentIndex].id}/${lessons[currentIndex].video}`;
+      if (refVideo) refVideo.src = `http://pbopensigne.lilian-maitre.fr/api/files/${lessons[currentIndex].collectionId}/${lessons[currentIndex].id}/${lessons[currentIndex].video}`;
     }
+
 
     function triggerValidation() {
         if (timerInterval) clearInterval(timerInterval);
@@ -294,17 +324,19 @@ try {
         }
     }
 
+
     function nextLesson(success = true) {
         // L'XP gérée ici : Bonus si rapide, 10 minimum si échec (au temps)
         const xpGain = success ? (50 + Math.floor(timeLeft * 5)) : 10;
         totalXp += xpGain;
         if(success) userAnswers.push(lessons[currentIndex].title);
         else missedSigns.push(lessons[currentIndex].title);
-        
+       
         currentIndex++;
         if (currentIndex < lessons.length) loadLesson();
         else { isDetecting = false; showEndScreen(); }
     }
+
 
     function showEndScreen() {
       const endScreen = document.getElementById('end-screen');
@@ -312,14 +344,14 @@ try {
       const xpDisplay = document.getElementById('earned-xp-display');
       const resultsList = document.getElementById('results-list');
       const gameCard = document.getElementById('game-card');
-      
+     
       if (gameCard) gameCard.style.display = 'none';
       if (endScreen) endScreen.classList.replace('hidden', 'flex');
       if (finalScore) finalScore.innerText = `${userAnswers.length}`;
       if (xpDisplay) xpDisplay.innerText = `${totalXp}`;
-      
+     
       addXp(totalXp);
-      
+     
       if (resultsList) {
           if (missedSigns.length > 0) {
               resultsList.innerHTML = `
@@ -342,9 +374,13 @@ try {
   });
 </script>
 
+
 <style is:global>
   .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
   .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 </style>
+
+
+

@@ -7,7 +7,7 @@ import PocketBase from 'pocketbase';
 
 // 1. Génération des routes dynamiques pour chaque leçon
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   
   // On récupère toutes les leçons de PocketBase
   const lessons = await pb.collection('lessons').getFullList();
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 
 // 2. Récupération de la leçon courante et initialisation du SDK PocketBase
 const { lesson } = Astro.props;
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 ---
 
 <Layout title={`${lesson.title} | Dictionnaire Kinezi`}>

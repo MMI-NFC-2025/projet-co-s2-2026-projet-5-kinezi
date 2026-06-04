@@ -41,7 +41,7 @@ import Sidebar from '../components/Sidebar.astro';
         </button>
       </div>
 
-      <form id="edit-name-form" class="hidden animate-fade-in-up flex items-center gap-2 mt-1 md:mt-0">
+      <form id="edit-name-form" class="hidden animate-fade-in-up items-center gap-2 mt-1 md:mt-0">
         <input type="text" id="name-input" class="bg-white/20 text-white placeholder-white/60 border border-white/40 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-white font-bold w-40 text-center" placeholder="Ton pseudo..." />
         <button type="submit" class="w-10 h-10 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center text-white shadow-md transition-colors" title="Sauvegarder">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -92,20 +92,6 @@ import Sidebar from '../components/Sidebar.astro';
 
     </div>
 
-    <div class="hidden md:flex animate-fade-in-up delay-300 w-full shrink-0 flex-wrap items-center justify-center gap-4 px-6">
-      <button class="bg-[#8C17F8] px-6 py-3.5 rounded-full flex items-center gap-3 shadow-[0_10px_25px_rgba(76,29,149,0.3)] active:scale-95 group transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(76,29,149,0.4)]">
-        <span class="font-black text-white text-base">Partager mon profil</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" /></svg>
-      </button>
-      <button class="relative overflow-hidden bg-[#8C17F8] px-8 py-3.5 rounded-full font-black text-lg text-white shadow-[0_10px_25px_rgba(76,29,149,0.3)] transition-all active:scale-95 group hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(76,29,149,0.4)]">
-        <span class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full"></span>
-        <span class="relative z-10">Ajouter des amis</span>
-      </button>
-      <button class="bg-[#8C17F8] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_10px_25px_rgba(76,29,149,0.3)] active:scale-95 text-white transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(76,29,149,0.4)]">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.158 3.71 3.71 1.159-1.158a2.625 2.625 0 000-3.71zm-2.904 6.624L5.113 22.607a4.5 4.5 0 01-1.625 1.056l-3.322 1.253a.75.75 0 01-.963-.963l1.253-3.322a4.5 4.5 0 011.056-1.625l13.714-13.714 3.711 3.711z" /></svg>
-      </button>
-    </div>
-
     <div class="flex md:hidden w-full max-w-[400px] flex-row items-center justify-center px-2 mt-8 mb-6 animate-fade-in-up delay-200 shrink-0">
       
       <div class="flex flex-col gap-3.5 z-10 w-[150px]">
@@ -126,30 +112,8 @@ import Sidebar from '../components/Sidebar.astro';
       </div>
 
       <div class="bg-white rounded-r-[36px] rounded-l-none py-7 pl-12 pr-5 shadow-md z-10 w-[130px] flex items-center justify-center">
-        <span id="mob-xp" class="font-black text-base text-gray-900 whitespace-nowrap text-[#8C17F8]">0 XP</span>
+        <span id="mob-xp" class="font-black text-base whitespace-nowrap text-[#8C17F8]">0 XP</span>
       </div>
-
-    </div>
-
-    <div class="flex md:hidden w-full max-w-[380px] flex-col gap-5 px-4 mt-2 mb-auto animate-fade-in-up delay-300 shrink-0">
-      
-      <div class="flex flex-row justify-center gap-3 w-full">
-        <button class="bg-[#8C17F8] flex-1 rounded-full py-3.5 flex justify-center items-center gap-2 shadow-md active:scale-95 transition-transform">
-          <span class="font-black text-white text-sm">Partager mon profil</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-          </svg>
-        </button>
-        <button class="bg-[#8C17F8] w-14 h-14 shrink-0 rounded-full flex items-center justify-center shadow-md active:scale-95 transition-transform">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.158 3.71 3.71 1.159-1.158a2.625 2.625 0 000-3.71zm-2.904 6.624L5.113 22.607a4.5 4.5 0 01-1.625 1.056l-3.322 1.253a.75.75 0 01-.963-.963l1.253-3.322a4.5 4.5 0 011.056-1.625l13.714-13.714 3.711 3.711z" />
-          </svg>
-        </button>
-      </div>
-
-      <button class="bg-[#8C17F8] text-white w-full rounded-full py-5 font-black text-2xl tracking-wide shadow-xl active:scale-95 transition-transform">
-        Ajouter des amis
-      </button>
 
     </div>
 
@@ -157,11 +121,9 @@ import Sidebar from '../components/Sidebar.astro';
 </Layout>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js'; // Remets ton import PocketBase correctement configuré !
 
   const loadProfileData = async () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
-
     if (!pb.authStore.isValid) {
       window.location.href = '/login-mail';
       return;
@@ -173,6 +135,33 @@ import Sidebar from '../components/Sidebar.astro';
         const freshUser = await pb.collection('users').getOne(user.id);
         user = freshUser;
         
+        // --- 🚀 DÉBUT DU SYSTÈME DE STREAK (FLAMME) ---
+        const today = new Date().toISOString().split('T')[0]; // Récupère la date du jour (ex: "2026-06-03")
+        let currentStreak = user.streak || 0;
+        let lastVisit = user.last_visit || '';
+
+        // Si l'utilisateur n'est pas encore venu aujourd'hui
+        if (lastVisit !== today) {
+          // On calcule la date d'hier
+          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+          
+          if (lastVisit === yesterday) {
+            // S'il est venu hier, on incrémente la flamme
+            currentStreak += 1;
+          } else {
+            // S'il a raté un jour (ou que c'est sa toute première visite), on réinitialise à 1
+            currentStreak = 1;
+          }
+
+          // On met à jour PocketBase en tâche de fond avec la nouvelle flamme et la date d'aujourd'hui
+          const updatedUser = await pb.collection('users').update(user.id, { 
+            streak: currentStreak,
+            last_visit: today
+          });
+          user = updatedUser; // On met à jour nos données locales avec la nouvelle flamme
+        }
+        // --- FIN DU SYSTÈME DE STREAK ---
+
         const authData = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}');
         authData.model = user;
         localStorage.setItem('pocketbase_auth', JSON.stringify(authData));
@@ -180,6 +169,7 @@ import Sidebar from '../components/Sidebar.astro';
         console.error("Impossible de rafraîchir les données de l'utilisateur", e);
     }
 
+    // Gestion de l'affichage du prénom
     const nameContainer = document.getElementById('name-display-container') as HTMLElement;
     const nameElement = document.getElementById('user-name') as HTMLElement;
     const editNameBtn = document.getElementById('edit-name-btn') as HTMLElement;
@@ -195,12 +185,14 @@ import Sidebar from '../components/Sidebar.astro';
       editNameBtn.addEventListener('click', () => {
         nameContainer.classList.add('hidden');
         editNameForm.classList.remove('hidden');
+        editNameForm.style.display = 'flex';
         nameInput.value = user.first_name || user.name || user.username || '';
         nameInput.focus();
       });
 
       cancelNameBtn.addEventListener('click', () => {
         editNameForm.classList.add('hidden');
+        editNameForm.style.display = 'none';
         nameContainer.classList.remove('hidden');
       });
 
@@ -220,6 +212,7 @@ import Sidebar from '../components/Sidebar.astro';
       });
     }
 
+    // Gestion de l'avatar
     const avatarPreview = document.getElementById('avatar-preview') as HTMLImageElement;
     const avatarDefault = document.getElementById('avatar-default') as HTMLElement;
     
@@ -250,17 +243,16 @@ import Sidebar from '../components/Sidebar.astro';
       });
     }
 
+    // Affichage des données (XP, Flamme, Rang)
     const userXp = user.xp || 0; 
     
     const pcXp = document.getElementById('pc-xp') as HTMLElement;
     const mobXp = document.getElementById('mob-xp') as HTMLElement;
     
-    if (pcXp) pcXp.textContent = userXp;
+    if (pcXp) pcXp.textContent = userXp.toString();
     if (mobXp) mobXp.textContent = `${userXp} XP`;
 
-    const currentLevel = Math.floor(userXp / 1000);
     const currentLevelXp = userXp % 1000;
-    
     const progressPercentage = Math.min((currentLevelXp / 1000) * 100, 100);
     const xpBar = document.getElementById('xp-bar') as HTMLElement;
     
@@ -268,6 +260,7 @@ import Sidebar from '../components/Sidebar.astro';
         xpBar.style.width = `${progressPercentage}%`;
     }
 
+    // On utilise la valeur streak qui a été calculée et mise à jour en début de script
     const userStreak = user.streak || 0;
     
     const pcStreak = document.getElementById('pc-streak') as HTMLElement;

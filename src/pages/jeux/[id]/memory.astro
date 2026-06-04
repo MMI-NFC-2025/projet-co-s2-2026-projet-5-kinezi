@@ -1,14 +1,14 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import Header from '../../../components/SiteHeader.astro'; 
-import Menu from '../../../components/Menu.astro';     
-import Sidebar from '../../../components/Sidebar.astro'; 
+import Header from '../../../components/SiteHeader.astro';
+import Menu from '../../../components/Menu.astro';    
+import Sidebar from '../../../components/Sidebar.astro';
 import PocketBase from 'pocketbase';
 
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   const categories = await pb.collection('categories').getFullList();
-  
+ 
   return categories.map((cat) => ({
     params: { id: cat.slug || cat.id },
     props: { category: cat },
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { category } = Astro.props;
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
 let lessons: any[] = [];
 try {
@@ -29,18 +29,18 @@ try {
 ---
 
 <Layout title={`Memory - ${category.title} | Kinezi`}>
-  
+ 
   <Header />
   <Menu />
   <Sidebar />
 
   <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-8 pb-24 px-6 relative flex flex-col items-center overflow-x-hidden">
-    
+   
     <div class="w-full max-w-[1000px] relative z-10 flex flex-col items-center">
-      
+     
       <div class="w-full flex items-center justify-start mb-4 animate-fade-in">
-        <button 
-          onclick="history.back()" 
+        <button
+          onclick="history.back()"
           class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
         >
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -60,13 +60,12 @@ try {
       </div>
 
       <div id="game-container" class="w-full max-w-[700px] mx-auto flex flex-col items-center animate-slide-up relative" style="animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards;">
-        
+       
         <div id="memory-board" class="flex flex-wrap justify-center gap-4 md:gap-5 w-full mb-8 transition-opacity duration-500">
-            {/* Les cartes seront injectées ici */}
         </div>
 
         <div id="end-screen" class="hidden w-full max-w-[420px] mx-auto flex-col bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(140,23,248,0.2)] border border-gray-100 z-50 overflow-hidden animate-slide-up mt-4">
-          
+         
           <div class="bg-gradient-to-br from-[#A898EE] to-[#8C17F8] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
             <div class="absolute inset-0 bg-white/10 w-full h-full" style="background-image: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2) 0%, transparent 70%);"></div>
             <span class="text-6xl drop-shadow-xl mb-4 relative z-10">🏆</span>
@@ -75,7 +74,7 @@ try {
           </div>
 
           <div class="p-6 md:p-8 flex flex-col gap-4 bg-white">
-            
+           
             <div class="w-full flex justify-between items-center bg-[#F4F0FF] rounded-2xl p-5 border border-white shadow-sm transition-transform hover:scale-[1.02]">
               <div class="flex items-center gap-3">
                 <span class="text-2xl">⏱️</span>
@@ -96,7 +95,7 @@ try {
             </div>
 
           </div>
-          
+         
           <div class="px-6 pb-8 pt-2">
             <a href={`/jeux/${category.slug || category.id}/enchainement`} class="group relative flex justify-center items-center w-full bg-[#8C17F8] text-white px-8 py-4 rounded-2xl font-black text-xl overflow-hidden shadow-[0_10px_20px_rgba(140,23,248,0.25)] transition-all hover:scale-[1.02] hover:shadow-[0_15px_30px_rgba(140,23,248,0.4)] active:scale-95">
                <span class="relative z-10 flex items-center">
@@ -113,20 +112,19 @@ try {
 
     </div>
 
-    {/* LECTEUR VIDÉO PLEIN ÉCRAN */}
     <div id="video-modal" class="fixed inset-0 bg-[#A898EE]/60 backdrop-blur-sm z-[100] hidden flex-col items-center justify-center p-4 md:p-10 opacity-0 transition-opacity duration-300 cursor-pointer">
-      
+     
       <button id="close-modal" class="absolute top-6 right-6 md:top-8 md:right-8 text-white hover:text-white/70 transition-colors z-[110] bg-black/20 p-2 rounded-full backdrop-blur-md">
         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
-      
+     
       <div id="modal-inner-card" class="w-full max-w-[650px] bg-[#A898EE] rounded-[2rem] p-6 md:p-10 flex flex-col items-center shadow-2xl relative cursor-default">
           <div class="w-full max-w-[300px] h-3 rounded-full bg-white/40 mb-6 overflow-hidden shadow-inner">
              <div id="modal-video-progress" class="h-full bg-[#8C17F8] w-0"></div>
           </div>
-          
+         
           <div id="modal-video-container" class="w-full aspect-video bg-black/20 rounded-xl flex items-center justify-center relative shadow-inner overflow-hidden cursor-pointer group">
              <video id="modal-video" src="" playsinline preload="metadata" class="w-full h-full object-cover rounded-xl"></video>
              
@@ -156,15 +154,13 @@ try {
     const board = document.getElementById('memory-board');
     const endScreen = document.getElementById('end-screen');
     const catSlug = document.getElementById('cat-slug').value;
-    
-    // NOUVELLES VARIABLES POUR LE CHRONOMÈTRE
+   
     const liveTimerEl = document.getElementById('live-timer');
     const finalTimeEl = document.getElementById('final-time');
     let startTime = null;
     let timerInterval = null;
     let gameStarted = false;
-    
-    // VARIABLES DU LECTEUR VIDÉO (MODAL)
+   
     const videoModal = document.getElementById('video-modal');
     const closeModalBtn = document.getElementById('close-modal');
     const modalVideo = document.getElementById('modal-video');
@@ -175,16 +171,16 @@ try {
     const playIcon = document.getElementById('modal-play-icon');
     const pauseIcon = document.getElementById('modal-pause-icon');
     const replayOverlay = document.getElementById('modal-replay-overlay');
-    
+   
     let modalCallback = null;
     let animFrameId;
-    
+   
     const shuffledLessons = [...lessons].sort(() => 0.5 - Math.random());
     const selectedLessons = shuffledLessons.slice(0, 6);
 
     let gameCards = [];
     selectedLessons.forEach((item) => {
-      const videoUrl = item.video ? `http://127.0.0.1:8090/api/files/${item.collectionId}/${item.id}/${item.video}` : null;
+      const videoUrl = item.video ? `http://pbopensigne.lilian-maitre.fr/api/files/${item.collectionId}/${item.id}/${item.video}` : null;
       gameCards.push({ type: 'text', name: item.title, title: item.title, videoUrl: null });
       gameCards.push({ type: 'video', name: item.title, title: item.title, videoUrl: videoUrl });
     });
@@ -194,7 +190,15 @@ try {
     gameCards.forEach((item) => {
       let backContent = '';
       if (item.type === 'text') {
-        backContent = `<span class="text-white font-black text-4xl md:text-5xl pointer-events-none text-center leading-tight line-clamp-2 px-2">${item.title}</span>`;
+        
+        let textSize = 'text-4xl md:text-5xl';
+        if (item.title.length > 12) {
+          textSize = 'text-xs md:text-sm';
+        } else if (item.title.length > 3) {
+          textSize = 'text-lg md:text-xl';
+        }
+
+        backContent = `<span class="text-white font-black ${textSize} pointer-events-none text-center leading-tight px-2 w-full break-words hyphens-auto">${item.title}</span>`;
       } else {
         backContent = `
           <div class="flex flex-col items-center justify-center pointer-events-none">
@@ -226,7 +230,6 @@ try {
     let firstCard, secondCard;
     let matchesFound = 0;
 
-    // FONCTIONS DU CHRONOMÈTRE
     function updateTimer() {
         if (!startTime) return;
         const now = new Date();
@@ -271,7 +274,7 @@ try {
         setTimeout(() => {
             videoModal.classList.add('hidden');
             videoModal.classList.remove('flex');
-            modalVideo.src = ''; 
+            modalVideo.src = '';
             if(modalCallback) modalCallback();
         }, 300);
     }
@@ -344,8 +347,8 @@ try {
     });
 
     function flipCard() {
-      startTimer(); 
-      
+      startTimer();
+     
       if (lockBoard) return;
       if (this === firstCard) return;
 
@@ -384,38 +387,34 @@ try {
         secondCard.classList.add('match-success');
         disableCards();
         matchesFound++;
-        
+       
         if (matchesFound === 6) {
-            stopTimer(); 
+            stopTimer();
 
-            // --- CALCUL D'XP EN FONCTION DU TEMPS ---
             const now = new Date();
             const timeInSeconds = Math.floor((now - startTime) / 1000);
-            
-            // Base de 50 XP + Bonus de rapidité si moins de 60 secondes
+           
             const baseXP = 50;
             const timeBonus = Math.max(0, 60 - timeInSeconds);
             const totalXp = baseXP + timeBonus;
 
-            // Mise à jour de l'affichage sur l'écran de fin
             const xpDisplayElement = document.getElementById('earned-xp-display');
             if (xpDisplayElement) {
                 xpDisplayElement.textContent = totalXp;
             }
 
-            // Envoi de l'événement avec le total calculé
             document.dispatchEvent(new CustomEvent('memory-game-won', { detail: { xp: totalXp } }));
 
             setTimeout(() => {
                 board.style.opacity = '0';
-                liveTimerEl.style.opacity = '0'; 
-                
+                liveTimerEl.style.opacity = '0';
+               
                 setTimeout(() => {
                     board.classList.add('hidden');
                     endScreen.classList.replace('hidden', 'flex');
                 }, 500);
-                
-            }, 1500); 
+               
+            }, 1500);
         }
       } else {
         unflipCards();
@@ -459,38 +458,30 @@ try {
 <script>
   import PocketBase from 'pocketbase';
 
-  // On précise à TypeScript que l'événement "e" est du type "Event" classique
   document.addEventListener('memory-game-won', async (e: Event) => {
-    // On le convertit en CustomEvent pour pouvoir accéder à e.detail sans erreur
     const customEvent = e as CustomEvent;
     const xpReward = customEvent.detail.xp;
-    
-    const pb = new PocketBase('http://127.0.0.1:8090');
+   
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
     if (!pb.authStore.isValid) {
       console.warn("Utilisateur non connecté, impossible d'ajouter l'XP.");
       return;
     }
 
-    // On dit à TypeScript que "user" peut contenir n'importe quoi ("any") pour l'apaiser
     const user: any = pb.authStore.model;
-    
-    // Sécurité supplémentaire demandée par TypeScript au cas où user serait vraiment null
+   
     if (!user || !user.id) return;
 
     try {
-      // 1. On récupère le profil à jour
       const freshUser = await pb.collection('users').getOne(user.id);
-      
-      // 2. Calcul du nouvel XP
+     
       const newXp = (freshUser.xp || 0) + xpReward;
 
-      // 3. Mise à jour de la base de données
-      const updatedUser = await pb.collection('users').update(user.id, { 
-        xp: newXp 
+      const updatedUser = await pb.collection('users').update(user.id, {
+        xp: newXp
       });
 
-      // 4. Mise à jour de la session locale
       const authData = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}');
       authData.model = updatedUser;
       localStorage.setItem('pocketbase_auth', JSON.stringify(authData));

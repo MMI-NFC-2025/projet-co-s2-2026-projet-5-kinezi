@@ -1,22 +1,25 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import Header from '../../../components/SiteHeader.astro'; 
-import Menu from '../../../components/Menu.astro';     
-import Sidebar from '../../../components/Sidebar.astro'; 
+import Header from '../../../components/SiteHeader.astro';
+import Menu from '../../../components/Menu.astro';    
+import Sidebar from '../../../components/Sidebar.astro';
 import PocketBase from 'pocketbase';
 
+
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   const categories = await pb.collection('categories').getFullList();
-  
+ 
   return categories.map((cat) => ({
     params: { id: cat.slug || cat.id },
     props: { category: cat },
   }));
 }
 
+
 const { category } = Astro.props;
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
+
 
 let lessons: any[] = [];
 try {
@@ -28,18 +31,20 @@ try {
 }
 ---
 
+
 <Layout title={`Speed Dactylo - ${category.title} | Kinezi`}>
   <Header />
   <Menu />
   <Sidebar />
 
+
   <main class="min-h-[calc(100dvh)] bg-[#FFFFFF] md:pl-24 pt-6 md:pt-8 pb-24 px-6 relative flex flex-col items-center overflow-x-hidden">
-    
+   
     <div class="w-full max-w-[1000px] relative z-10 flex flex-col items-center">
-      
+     
       <div class="w-full flex items-center justify-start mb-4 animate-fade-in">
-        <button 
-          onclick="history.back()" 
+        <button
+          onclick="history.back()"
           class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
         >
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -51,6 +56,7 @@ try {
         </h1>
       </div>
 
+
       <div class="text-center mb-6 animate-fade-in" style="animation-delay: 100ms; opacity: 0; animation-fill-mode: forwards;">
         <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-3">
           Speed Dactylo
@@ -60,38 +66,43 @@ try {
         </div>
       </div>
 
+
       <div class="w-full max-w-[550px] relative animate-slide-up" style="animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards;">
-        
+       
         <div id="game-card" class="w-full bg-[#A898EE] rounded-[2rem] p-6 md:p-8 flex flex-col items-center shadow-xl relative overflow-hidden transition-colors duration-300">
-          
+         
           <h3 class="text-white text-xl md:text-2xl font-black tracking-wide mb-6 text-center drop-shadow-sm">
             Quel est ce signe ?
           </h3>
+
 
           <div class="w-full max-w-[280px] mx-auto aspect-video bg-black/10 rounded-2xl overflow-hidden mb-8 shadow-inner relative flex items-center justify-center">
             <video id="sign-video" src="" loop muted playsinline autoplay class="w-full h-full object-cover pointer-events-none"></video>
             <div id="feedback-overlay" class="absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none"></div>
           </div>
 
+
           <div class="w-full max-w-[400px] mx-auto relative">
-            <input 
-              type="text" 
-              id="answer-input" 
-              placeholder="Entrez votre réponse..." 
+            <input
+              type="text"
+              id="answer-input"
+              placeholder="Entrez votre réponse..."
               autocomplete="off"
               class="w-full bg-white text-gray-900 placeholder-gray-400 font-bold text-center md:text-left text-lg rounded-xl px-6 py-4 outline-none focus:ring-4 focus:ring-white/40 shadow-inner transition-all"
             />
           </div>
         </div>
 
+
         <div id="end-screen" class="hidden w-full max-w-[420px] mx-auto flex-col bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(140,23,248,0.2)] border border-gray-100 z-50 overflow-hidden animate-slide-up mt-4">
-          
+         
           <div class="bg-gradient-to-br from-[#A898EE] to-[#8C17F8] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
             <div class="absolute inset-0 bg-white/10 w-full h-full" style="background-image: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2) 0%, transparent 70%);"></div>
             <span class="text-6xl drop-shadow-xl mb-4 relative z-10">⌨️</span>
             <h3 class="text-3xl md:text-4xl font-black text-white tracking-tight relative z-10 drop-shadow-sm">Partie terminée</h3>
             <p class="text-white/90 font-bold mt-2 relative z-10 text-lg">Bilan de ta vitesse</p>
           </div>
+
 
           <div class="p-6 md:p-8 flex flex-col gap-4 bg-white">
             <div class="w-full flex justify-between items-center bg-[#F4F0FF] rounded-2xl p-5 border border-white shadow-sm transition-transform hover:scale-[1.02]">
@@ -104,6 +115,7 @@ try {
               </div>
             </div>
 
+
             <div class="w-full flex justify-between items-center bg-[#FFF8E7] rounded-2xl p-5 border border-[#FFE8A1] shadow-sm transition-transform hover:scale-[1.02]">
               <div class="flex items-center gap-3">
                 <span class="text-2xl">⚡</span>
@@ -115,11 +127,12 @@ try {
               </div>
             </div>
 
+
             <div class="max-h-[250px] overflow-y-auto custom-scrollbar pr-2 mt-2">
                <div id="results-list" class="flex flex-col gap-3"></div>
             </div>
           </div>
-          
+         
           <div class="px-6 pb-8 pt-2">
             <a href={`/jeux/${category.slug || category.id}/enchainement`} class="group relative flex justify-center items-center w-full bg-[#8C17F8] text-white px-8 py-4 rounded-2xl font-black text-xl overflow-hidden shadow-[0_10px_20px_rgba(140,23,248,0.25)] transition-all hover:scale-[1.02] hover:shadow-[0_15px_30px_rgba(140,23,248,0.4)] active:scale-95">
                <span class="relative z-10 flex items-center">
@@ -130,63 +143,73 @@ try {
             </a>
           </div>
 
+
         </div>
+
 
       </div>
     </div>
-    
+   
     <input type="hidden" id="lessons-data" value={JSON.stringify(lessons)} />
   </main>
 </Layout>
 
+
 <script>
   import { addXp } from '../../../utils/xp';
+
 
   document.addEventListener('DOMContentLoaded', () => {
     const lessonsDataInput = document.getElementById('lessons-data') as HTMLInputElement;
     if (!lessonsDataInput) return;
-    
+   
     const lessons = JSON.parse(lessonsDataInput.value);
+
 
     const gameCard = document.getElementById('game-card');
     const videoEl = document.getElementById('sign-video') as HTMLVideoElement;
     const inputEl = document.getElementById('answer-input') as HTMLInputElement;
     const feedbackOverlay = document.getElementById('feedback-overlay');
-    
+   
     if (!lessons || lessons.length === 0) {
       if(gameCard) gameCard.innerHTML = '<p class="text-center text-white mt-10 font-bold">Aucun signe disponible dans cette catégorie.</p>';
       return;
     }
 
+
     const MAX_QUESTIONS = Math.min(10, lessons.length);
     const shuffledLessons = [...lessons].sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
-    
+   
     const totalCountEl = document.getElementById('total-count');
     if(totalCountEl) totalCountEl.innerText = MAX_QUESTIONS.toString();
+
 
     let currentIndex = 0;
     let userAnswers: any[] = [];
     let isAnimating = false;
 
+
     function normalizeString(str: string) {
       return str.toLowerCase()
                 .trim()
                 .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, ""); 
+                .replace(/[\u0300-\u036f]/g, "");
     }
+
 
     function loadLesson() {
       const currentLesson = shuffledLessons[currentIndex];
-      const url = `http://127.0.0.1:8090/api/files/${currentLesson.collectionId}/${currentLesson.id}/${currentLesson.video}`;
+      const url = `http://pbopensigne.lilian-maitre.fr/api/files/${currentLesson.collectionId}/${currentLesson.id}/${currentLesson.video}`;
       videoEl.src = url;
       videoEl.play().catch(e => console.log("Autoplay attend interaction"));
-      
+     
       inputEl.value = '';
-      inputEl.focus(); 
-      
+      inputEl.focus();
+     
       const currentCountEl = document.getElementById('current-count');
       if(currentCountEl) currentCountEl.innerText = (currentIndex + 1).toString();
     }
+
 
     function showEndScreen() {
       const endScreen = document.getElementById('end-screen');
@@ -194,24 +217,28 @@ try {
       const resultsList = document.getElementById('results-list');
       const xpDisplay = document.getElementById('earned-xp-display');
 
+
       if (gameCard) gameCard.style.display = 'none';
+
 
       const correctCount = userAnswers.filter(a => a.isCorrect).length;
       if (scoreContainer) scoreContainer.innerText = correctCount.toString();
-      
+     
       // Calcul et ajout de l'XP (10 XP par bonne réponse)
       const totalXp = correctCount * 10;
       if (xpDisplay) xpDisplay.innerText = totalXp.toString();
       addXp(totalXp);
 
+
       if (resultsList) {
           resultsList.innerHTML = userAnswers.map((ans, index) => {
             const bgColor = ans.isCorrect ? 'bg-[#4ade80]/10 border-[#4ade80]/20' : 'bg-[#f87171]/10 border-[#f87171]/20';
             const iconColor = ans.isCorrect ? 'text-[#4ade80] bg-[#4ade80]/20' : 'text-[#f87171] bg-[#f87171]/20';
-            
-            const iconSVG = ans.isCorrect 
+           
+            const iconSVG = ans.isCorrect
               ? `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`
               : `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+
 
             let userFeedback = '';
             if (ans.isCorrect) {
@@ -220,6 +247,7 @@ try {
                 const typed = ans.userAnswer.trim() === "" ? "Rien" : ans.userAnswer;
                 userFeedback = `<span class="text-sm text-gray-500 line-through mr-2">${typed}</span> <span class="text-sm font-bold text-[#f87171]">Faux</span>`;
             }
+
 
             return `
             <div class="flex items-center justify-between p-4 rounded-[1rem] ${bgColor} border animate-fade-in" style="animation-delay: ${index * 50}ms; opacity: 0; animation-fill-mode: forwards;">
@@ -237,26 +265,31 @@ try {
           }).join('');
       }
 
+
       if (endScreen) endScreen.classList.replace('hidden', 'flex');
     }
+
 
     function checkAnswer() {
       if (isAnimating) return;
       isAnimating = true;
 
+
       const userAnswer = inputEl.value;
       const currentLesson = shuffledLessons[currentIndex];
-      
+     
       const normalizedInput = normalizeString(userAnswer);
       const normalizedReal = normalizeString(currentLesson.title);
-      
+     
       const isCorrect = normalizedInput === normalizedReal;
+
 
       userAnswers.push({
         realTitle: currentLesson.title,
         userAnswer: userAnswer,
         isCorrect: isCorrect
       });
+
 
       if (isCorrect) {
         if(feedbackOverlay) feedbackOverlay.className = "absolute inset-0 z-10 transition-opacity duration-200 pointer-events-none bg-[#4ade80]/40 opacity-100";
@@ -267,22 +300,24 @@ try {
         if(gameCard) gameCard.classList.add('animate-shake');
       }
 
+
       setTimeout(() => {
         if(feedbackOverlay) feedbackOverlay.style.opacity = '0';
         inputEl.className = "w-full bg-white text-gray-900 placeholder-gray-400 font-bold text-center md:text-left text-lg rounded-xl px-6 py-4 outline-none focus:ring-4 focus:ring-white/40 shadow-inner transition-all";
         if(gameCard) gameCard.classList.remove('animate-shake');
-        
+       
         currentIndex++;
-        
+       
         if (currentIndex < MAX_QUESTIONS) {
           loadLesson();
         } else {
           showEndScreen();
         }
-        
+       
         isAnimating = false;
-      }, 700); 
+      }, 700);
     }
+
 
     inputEl.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
@@ -291,16 +326,18 @@ try {
       }
     });
 
+
     loadLesson();
   });
 </script>
 
+
 <style is:global>
   .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
   .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-  
+ 
   .animate-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-  
+ 
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes shake {
@@ -309,8 +346,16 @@ try {
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  
+ 
   .custom-scrollbar::-webkit-scrollbar { width: 6px; }
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
   .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #E8E8E8; border-radius: 10px; }
 </style>
+
+
+
+Voici toutes mes pages de mini jeux 
+j’ai plus les signes videos donc les mini jeux ne sont plus fonctionnels et meme si on a importé le pocketbase
+
+Et pour chaque page me donner tout le code complet pour que je puisse copier coller la page entière
+

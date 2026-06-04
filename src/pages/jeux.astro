@@ -3,9 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/SiteHeader.astro'; 
 import Menu from '../components/Menu.astro';     
 import Sidebar from '../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
-
-const pb = new PocketBase('http://127.0.0.1:8090');
+import { pb } from '../lib/pb.js'; 
 
 let categories: any[] = [];
 
@@ -65,12 +63,11 @@ const formatEmojis = (emojiString: string) => {
         {categories.map((cat, index) => {
           const iconPath = getCategoryIcon(cat.title);
           
-          // Logique de taille personnalisée
-          let sizeClass = "w-28 h-28 md:w-36 md:h-36"; // Taille standard pour les autres
+          let sizeClass = "w-28 h-28 md:w-36 md:h-36";
           if (iconPath === '/pouce politesse.svg') {
-            sizeClass = "w-20 h-20 md:w-24 md:h-24"; // Reste petit
+            sizeClass = "w-20 h-20 md:w-24 md:h-24"; 
           } else if (iconPath === '/TEMPS ET CHIFFRES.svg') {
-            sizeClass = "w-36 h-36 md:w-48 md:h-48"; // Encore plus grand pour Temps et Chiffres
+            sizeClass = "w-36 h-36 md:w-48 md:h-48"; 
           }
           
           return (
@@ -80,7 +77,6 @@ const formatEmojis = (emojiString: string) => {
               style={`animation-delay: ${index * 80}ms; opacity: 0; animation-fill-mode: forwards;`}
             >
               
-              {/* Conteneur de l'icône : Suppression du fond et de l'arrondi (la cellule) */}
               <div class="w-full h-32 md:h-48 flex items-center justify-center mb-4 relative">
                 
                 {iconPath ? (

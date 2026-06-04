@@ -1,35 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/SiteHeader.astro'; 
+import Menu from '../components/Menu.astro';     
+import Sidebar from '../components/Sidebar.astro'; 
+---
+
+<Layout title="Paramètres | Kinezi">
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-screen bg-[#FFFFFF] md:pl-24 pt-6 md:pt-12 pb-24 px-6 relative flex flex-col items-center overflow-x-hidden">
+    
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#A898EE]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+
+    <div class="w-full max-w-[800px] relative z-10 animate-slide-up">
+      
+      <div class="w-full flex items-center justify-start mb-8">
+        <button 
+          onclick="history.back()" 
+          class="mr-3 text-gray-500 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-3xl md:text-5xl font-black text-gray-900 tracking-tight">
+          Paramètres
+        </h1>
+      </div>
+
+      <div class="flex flex-col gap-6">
+
+        <div class="bg-white rounded-3xl p-6 md:p-8 border border-gray-200 shadow-md hover:shadow-xl hover:shadow-[#8C17F8]/10 transition-all duration-300 flex items-center justify-between">
+          <div class="flex flex-col pr-4">
+            <h2 class="text-xl font-black text-gray-900 mb-1">Notifications par email</h2>
+            <p class="text-gray-700 font-medium text-sm">Recevoir des rappels pour maintenir ta flamme d'apprentissage.</p>
+          </div>
+          <button id="btn-notifications" class="shrink-0 w-14 h-8 rounded-full outline-none focus:ring-4 focus:ring-[#8C17F8]/20 transition-all shadow-sm">
+            <div id="toggle-bg-notifications" class="w-full h-full bg-[#E5E5E5] border border-gray-300 rounded-full p-1 flex items-center justify-start transition-all duration-300">
+              <div class="w-6 h-6 bg-white rounded-full shadow-sm"></div>
+            </div>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 md:p-8 border border-gray-200 shadow-md hover:shadow-xl hover:shadow-[#8C17F8]/10 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex flex-col">
+          <h2 class="text-xl font-black text-gray-900 mb-1">Mon abonnement</h2>
+          <p class="text-gray-700 font-medium text-sm">Gérer les options Premium de Kinezi.</p>
+        </div>
+  
+        {/* Le bouton est devenu un lien <a> avec un href */}
+        <a id="btn-abonnement" href="/abonnement" class="bg-[#F4F0FF] text-[#8C17F8] font-black px-6 py-3 rounded-full hover:bg-[#EAE4FF] hover:shadow-md transition-all whitespace-nowrap text-center inline-block">
+        Voir les offres
+        </a>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 md:p-8 border border-gray-200 shadow-md hover:shadow-xl hover:shadow-[#8C17F8]/10 transition-all duration-300 flex flex-col gap-2">
+          <h2 class="text-xl font-black text-gray-900 mb-1 flex items-center gap-2">
+            À propos de Kinezi
+          </h2>
+          <p class="text-gray-700 font-medium text-sm leading-relaxed">
+            Kinezi (projet Opensigne) est une plateforme interactive pour l'apprentissage de la Langue des Signes Française (LSF). Ce projet pédagogique a été conçu avec passion pour rendre la communication inclusive plus accessible à tous.
+          </p>
+        </div>
+
+        <div class="bg-[#F4F0FF] rounded-3xl p-6 md:p-8 border border-[#D9CFFF] shadow-md hover:shadow-xl hover:shadow-[#8C17F8]/15 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-[#8C17F8]/10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2"></div>
+          <div class="flex flex-col relative z-10">
+            <h2 class="text-xl font-black text-gray-900 mb-1">Besoin d'un coup de main ?</h2>
+            <p class="text-gray-700 font-medium text-sm">Trouve les réponses à tes questions dans notre FAQ ou contacte-nous directement.</p>
+          </div>
+          <a href="/aide" class="bg-[#8C17F8] text-white font-black px-8 py-3.5 rounded-full hover:-translate-y-0.5 shadow-md hover:shadow-[0_10px_20px_rgba(140,23,248,0.3)] active:scale-95 transition-all text-center relative z-10 whitespace-nowrap">
+            Consulter l'Aide
+          </a>
+        </div>
+
+        <div class="mt-4 border border-red-200 bg-red-50 rounded-3xl p-6 md:p-8 shadow-md hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300">
+          <h2 class="text-xl font-black text-red-600 mb-2">Suppresion</h2>
+          <p class="text-red-500/80 font-medium text-sm mb-6">La suppression de ton compte est définitive. Tu perdras ton XP, tes classements et tes favoris.</p>
+          <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
+            Supprimer mon compte
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div id="delete-modal" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div id="delete-modal-content" class="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl flex flex-col items-center text-center scale-95 opacity-0 transition-all duration-300">
+      
+      <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+
+      <h3 class="text-2xl font-black text-gray-900 mb-2">Es-tu vraiment sûr ?</h3>
+      <p class="text-gray-700 font-medium mb-8">
+        Cette action est irréversible. Toutes tes données seront effacées de nos serveurs.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 w-full">
+        <button id="cancel-delete" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200 font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-sm">
+          Annuler
+        </button>
+        <button id="confirm-delete" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-sm hover:shadow-md">
+          Oui, supprimer
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
+  const initParametres = () => {
+    console.log("⚙️ Initialisation de la page paramètres...");
 
-    // On dit à TypeScript de ne pas s'inquiéter pour le type du modèle
     const currentUser: any = pb.authStore.model;
 
     // --- NOTIFICATIONS TOGGLE ---
     const notifBtn = document.getElementById('btn-notifications');
     const notifToggleBg = document.getElementById('toggle-bg-notifications');
-    
-    let notifsEnabled = false;
-    if (pb.authStore.isValid && currentUser) {
-        notifsEnabled = currentUser.wants_emails === true;
-    }
+    let notifsEnabled = currentUser?.wants_emails || false;
 
     const updateNotifUI = () => {
       if (!notifToggleBg) return;
+      
       if (notifsEnabled) {
-        notifToggleBg.classList.replace('bg-[#E5E5E5]', 'bg-[#A898EE]');
-        notifToggleBg.classList.replace('border-gray-200', 'border-[#A898EE]');
-        notifToggleBg.classList.replace('justify-start', 'justify-end');
+        notifToggleBg.classList.remove('justify-start', 'bg-[#E5E5E5]');
+        notifToggleBg.classList.add('justify-end', 'bg-[#A898EE]');
       } else {
-        notifToggleBg.classList.replace('bg-[#A898EE]', 'bg-[#E5E5E5]');
-        notifToggleBg.classList.replace('border-[#A898EE]', 'border-gray-200');
-        notifToggleBg.classList.replace('justify-end', 'justify-start');
+        notifToggleBg.classList.add('justify-start', 'bg-[#E5E5E5]');
+        notifToggleBg.classList.remove('justify-end', 'bg-[#A898EE]');
       }
     };
 
-    if (notifBtn && pb.authStore.isValid && currentUser) {
+    if (notifBtn && currentUser && notifToggleBg) {
       updateNotifUI(); 
       
       notifBtn.addEventListener('click', async () => {
@@ -37,7 +160,6 @@
         updateNotifUI(); 
         
         try {
-            // L'erreur TypeScript venait d'ici, maintenant currentUser est sécurisé
             const updatedUser = await pb.collection('users').update(currentUser.id, {
                 wants_emails: notifsEnabled
             });
@@ -57,14 +179,6 @@
       });
     }
 
-    // --- ABONNEMENT ---
-    const subBtn = document.getElementById('btn-abonnement');
-    if (subBtn) {
-      subBtn.addEventListener('click', () => {
-        alert("La fonctionnalité d'abonnement sera bientôt disponible !");
-      });
-    }
-
     // --- SUPPRESSION DE COMPTE ---
     const deleteBtn = document.getElementById('btn-delete');
     const deleteModal = document.getElementById('delete-modal');
@@ -73,20 +187,25 @@
     const confirmDelete = document.getElementById('confirm-delete');
 
     if (deleteBtn && deleteModal && modalContent && cancelDelete && confirmDelete) {
-      
+      console.log("✅ Boutons de suppression trouvés dans le HTML");
+
+      // 1. Ouvrir le modal
       deleteBtn.addEventListener('click', () => {
         deleteModal.classList.remove('hidden');
+        deleteModal.classList.add('flex');
         setTimeout(() => {
           modalContent.classList.remove('scale-95', 'opacity-0');
           modalContent.classList.add('scale-100', 'opacity-100');
         }, 10);
       });
 
+      // 2. Fermer le modal
       const closeModal = () => {
         modalContent.classList.remove('scale-100', 'opacity-100');
         modalContent.classList.add('scale-95', 'opacity-0');
         setTimeout(() => {
           deleteModal.classList.add('hidden');
+          deleteModal.classList.remove('flex');
         }, 300);
       };
 
@@ -95,30 +214,45 @@
         if (e.target === deleteModal) closeModal();
       });
 
+      // 3. Confirmer la suppression
       confirmDelete.addEventListener('click', async () => {
-        if (!pb.authStore.isValid || !currentUser) {
-            window.location.href = '/login-mail';
+        if (!currentUser) {
+            alert("Erreur : Tu dois être connecté pour supprimer ton compte.");
             return;
         }
-        
+
         try {
-            confirmDelete.innerText = "Suppression...";
+            confirmDelete.innerText = "Suppression en cours...";
             confirmDelete.classList.add('opacity-50', 'cursor-not-allowed');
             
+            // Requete à Pocketbase
             await pb.collection('users').delete(currentUser.id);
+            console.log("✅ Suppression réussie côté serveur !");
             
+            // Nettoyage local et redirection
             pb.authStore.clear();
             localStorage.removeItem('pocketbase_auth');
             window.location.href = '/login-mail'; 
             
-        } catch (error) {
-            console.error("Erreur lors de la suppression :", error);
-            alert("Une erreur est survenue lors de la suppression de ton compte. Réessaie plus tard.");
+        } catch (error: any) {
+            console.error("❌ Erreur lors de la suppression :", error);
+            
+            // L'alerte affichera l'erreur précise
+            alert(`Erreur PocketBase : ${error.message} (${error.status})`);
+            
             closeModal();
             confirmDelete.innerText = "Oui, supprimer";
             confirmDelete.classList.remove('opacity-50', 'cursor-not-allowed');
         }
       });
+    } else {
+      console.error("❌ Les boutons de suppression n'ont pas été trouvés dans le code.");
     }
-  });
+  };
+
+  // On lance la fonction immédiatement au chargement
+  initParametres();
+  
+  // Et on s'assure qu'elle se relance si on navigue via Astro ViewTransitions
+  document.addEventListener('astro:page-load', initParametres);
 </script>

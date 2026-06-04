@@ -76,10 +76,10 @@ import Layout from '../layouts/Layout.astro';
 
     <div class="flex gap-8 items-center">
       <button class="transition-all duration-300 hover:-translate-y-1 hover:scale-110 active:scale-95 drop-shadow-md hover:drop-shadow-xl">
-        <img src="/apple.png" alt="Connexion avec Apple" class="w-10 h-10 object-contain" />
+        <img src="/apple.svg" alt="Connexion avec Apple" class="w-10 h-10 object-contain" />
       </button>
       <button class="transition-all duration-300 hover:-translate-y-1 hover:scale-110 active:scale-95 drop-shadow-md hover:drop-shadow-xl">
-        <img src="/google.png" alt="Connexion avec Google" class="w-10 h-10 object-contain" />
+        <img src="/google.svg" alt="Connexion avec Google" class="w-10 h-10 object-contain" />
       </button>
     </div>
 
@@ -94,7 +94,7 @@ import Layout from '../layouts/Layout.astro';
   import PocketBase from 'pocketbase';
 
   // 1. Initialisation de la connexion à ton backend local
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
   // 2. Récupération des éléments du DOM
   const form = document.getElementById('register-form') as HTMLFormElement;

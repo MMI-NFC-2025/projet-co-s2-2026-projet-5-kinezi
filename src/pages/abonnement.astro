@@ -1,0 +1,180 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/SiteHeader.astro';
+import Menu from '../components/Menu.astro';
+import Sidebar from '../components/Sidebar.astro';
+---
+
+<Layout title="Abonnement | OpenSigne">
+  
+  <Header />
+  <Menu />
+  <Sidebar />
+
+  <main class="min-h-[calc(100dvh)] bg-[#F8F9FA] pt-20 md:pt-24 pb-32 px-4 md:px-8 relative flex flex-col items-center overflow-x-hidden font-sans">
+    
+    <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-8 md:mb-12 tracking-tight animate-fade-in text-center drop-shadow-sm">
+      Abonnement
+    </h1>
+
+    {/* CONTAINER PRINCIPAL (Carte + Paiement) */}
+    <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 lg:gap-10 w-full max-w-[1000px] animate-slide-up">
+      
+      {/* --- CARTE UNIQUE PREMIUM --- */}
+      <div class="flex flex-col w-full max-w-[420px] shrink-0 bg-white rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(140,23,248,0.15)] border border-gray-100 transition-transform hover:-translate-y-2 duration-300">
+        
+        {/* EN-TÊTE AVEC LE LOGO OPENSIGNE */}
+        <div class="h-[180px] bg-[#8C17F8] flex items-center justify-center relative p-6">
+          <img src="/OpenSigne_logo_main_blanche_texte_blanc.svg" alt="OpenSigne" class="w-full max-w-[220px] h-auto drop-shadow-lg object-contain" />
+        </div>
+        
+        <div class="p-6 md:p-8">
+          <div class="flex justify-between items-center mb-6">
+            <div class="flex items-baseline">
+              <span class="text-3xl font-black text-gray-900">9,99€</span>
+              <span class="text-xs text-gray-400 font-bold ml-1 uppercase tracking-wide">/mois</span>
+            </div>
+            <div class="flex items-center gap-2 text-[#8C17F8]">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636a5 5 0 010 7.072m0 0l-7.071 7.07M18.364 5.636L11.293 12.7m-4.243-4.243a5 5 0 000 7.072m0 0l7.071 7.07m-7.071-7.07L11.293 12.7" d="M8 8a4 4 0 100 8h8a4 4 0 100-8H8z"/></svg>
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="4" ry="4"/><path fill="white" d="M10 8l6 4-6 4V8z"/></svg>
+            </div>
+          </div>
+          
+          <p class="text-xl font-black text-gray-900 drop-shadow-sm tracking-wide border-b border-gray-100 pb-4 mb-4">Abonnement Premium</p>
+          
+          {/* LISTE DES FONCTIONNALITÉS */}
+          <ul class="flex flex-col gap-3.5 text-[13px] md:text-sm text-gray-600">
+            
+            <li class="flex items-start gap-2.5">
+              <div class="bg-[#4ade80]/20 p-1 rounded-full shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <span class="leading-snug"><strong>Aucune publicité</strong> (suppression totale des annonces).</span>
+            </li>
+            
+            <li class="flex items-start gap-2.5">
+              <div class="bg-[#4ade80]/20 p-1 rounded-full shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <span class="leading-snug"><strong>Renouvellement de la streak gratuit.</strong></span>
+            </li>
+            
+            <li class="flex items-start gap-2.5">
+              <div class="bg-[#4ade80]/20 p-1 rounded-full shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <span class="leading-snug"><strong>Revue des erreurs :</strong> accès aux signes mal maîtrisés avec la possibilité de les rejouer de manière spécifique.</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <div class="bg-[#4ade80]/20 p-1 rounded-full shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <span class="leading-snug"><strong>Amélioration des jeux :</strong> déblocage de niveaux supplémentaires, mise en place d'une difficulté progressive et ajout de modes chronométrés.</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <div class="bg-[#4ade80]/20 p-1 rounded-full shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <span class="leading-snug"><strong>Accès prioritaire aux fonctionnalités expérimentales :</strong> incluant notamment la reconnaissance du geste via la caméra de l'utilisateur.</span>
+            </li>
+
+            <li class="flex items-start gap-2.5">
+              <div class="bg-[#4ade80]/20 p-1 rounded-full shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <span class="leading-snug"><strong>Statistiques avancées :</strong> outil de suivi détaillé de la progression, trié par catégorie.</span>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+
+      {/* --- FORMULAIRE DE PAIEMENT --- */}
+      <div class="w-full max-w-[450px] bg-white rounded-[2rem] p-8 shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-gray-100 relative">
+        
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-[#F4F0FF] rounded-full flex items-center justify-center text-[#8C17F8]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          </div>
+          <h2 class="text-2xl font-black text-gray-900 tracking-tight">Paiement</h2>
+        </div>
+
+        <form class="flex flex-col gap-5">
+          
+          {/* Nom */}
+          <div class="flex flex-col">
+            <label class="text-sm font-bold text-gray-600 mb-1.5 ml-1">Nom sur la carte</label>
+            <input 
+              type="text" 
+              placeholder="Ex: Jean Dupont" 
+              class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] transition-all font-bold text-gray-900 placeholder-gray-400" 
+            />
+          </div>
+
+          {/* Numéro de carte */}
+          <div class="flex flex-col">
+            <label class="text-sm font-bold text-gray-600 mb-1.5 ml-1">Numéro de carte</label>
+            <div class="relative">
+              <input 
+                type="text" 
+                placeholder="0000 0000 0000 0000" 
+                maxLength="19"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] transition-all font-bold text-gray-900 placeholder-gray-400 tracking-widest" 
+              />
+              <svg class="w-6 h-6 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+            </div>
+          </div>
+
+          {/* Expiration & CVC */}
+          <div class="flex gap-4">
+            <div class="flex flex-col w-1/2">
+              <label class="text-sm font-bold text-gray-600 mb-1.5 ml-1">Expiration</label>
+              <input 
+                type="text" 
+                placeholder="MM/AA" 
+                maxLength="5"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] transition-all font-bold text-gray-900 placeholder-gray-400 text-center tracking-widest" 
+              />
+            </div>
+            <div class="flex flex-col w-1/2">
+              <label class="text-sm font-bold text-gray-600 mb-1.5 ml-1">CVC</label>
+              <input 
+                type="text" 
+                placeholder="123" 
+                maxLength="3"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] transition-all font-bold text-gray-900 placeholder-gray-400 text-center tracking-widest" 
+              />
+            </div>
+          </div>
+
+          {/* Bouton S'abonner */}
+          <button type="button" class="mt-2 w-full bg-[#8C17F8] hover:bg-[#7a14da] text-white font-black text-lg py-4 rounded-xl shadow-[0_10px_20px_rgba(140,23,248,0.25)] hover:shadow-[0_15px_30px_rgba(140,23,248,0.4)] transition-all hover:-translate-y-1 active:scale-95 flex justify-center items-center gap-2">
+            Payer 9,99 €
+            <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+</Layout>
+
+<style is:global>
+  .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.6s ease-out forwards; animation-delay: 0.1s; opacity: 0; }
+  
+  @keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(15px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+  
+  @keyframes slideUp { 
+    from { opacity: 0; transform: translateY(30px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+</style>

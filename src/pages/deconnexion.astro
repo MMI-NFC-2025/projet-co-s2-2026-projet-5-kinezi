@@ -14,7 +14,7 @@ import Layout from '../layouts/Layout.astro';
   import PocketBase from 'pocketbase';
 
   const logout = () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
     
     // 1. On efface le token du localStorage
     pb.authStore.clear();

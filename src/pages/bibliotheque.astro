@@ -5,22 +5,45 @@ import Menu from '../components/Menu.astro';
 import Sidebar from '../components/Sidebar.astro'; 
 import { pb } from '../lib/pb.js';
 
-const records = await pb.collection('users').getFullList();
-
 let lessons: any[] = [];
+let categories: any[] = [];
+
 try {
-  lessons = await pb.collection('lessons').getFullList({
-    sort: 'category,order',
-  });
+  lessons = await pb.collection('lessons').getFullList({ sort: 'order' });
+  categories = await pb.collection('categories').getFullList();
 } catch (error) {
   console.error("Erreur PocketBase :", error);
 }
 
+const categoryMap: Record<string, string> = {};
+categories.forEach(cat => {
+  categoryMap[cat.id] = cat.title;
+});
+
 const groupedLessons = lessons.reduce((acc: any, lesson) => {
-  if (!acc[lesson.category]) acc[lesson.category] = [];
-  acc[lesson.category].push(lesson);
+  const categoryName = categoryMap[lesson.category] || 'Autres';
+  
+  if (!acc[categoryName]) acc[categoryName] = [];
+  acc[categoryName].push(lesson);
   return acc;
 }, {});
+
+const getVideoUrl = (record: any) => {
+  if (!record.video) return '';
+  return pb.files.getUrl(record, record.video);
+};
+
+// On réutilise ta fonction pour lier le bon SVG à chaque catégorie
+const getCategoryIcon = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes('alphabet')) return '/ABC.svg';
+  if (t.includes('politesse')) return '/pouce politesse.svg';
+  if (t.includes('urgence')) return '/urgence.svg';
+  if (t.includes('sentiment') || t.includes('sensation') || t.includes('émotion')) return '/EMOJIS.svg';
+  if (t.includes('temps') || t.includes('chiffre')) return '/TEMPS ET CHIFFRES.svg';
+  if (t.includes('maison') || t.includes('lieu') || t.includes('quotidien')) return '/maison.svg';
+  return null; 
+};
 ---
 
 <Layout title="Bibliothèque | Kinezi">
@@ -28,59 +51,194 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
   <Menu />
   <Sidebar />
 
-  <main class="min-h-screen bg-[#FFFFFF] md:ml-20 pt-8 pb-24 px-6 md:px-12">
+  <main class="min-h-screen bg-[#FFFFFF] md:ml-20 pt-8 pb-24 px-6 md:px-12 relative">
     <div class="max-w-[1100px] mx-auto">
       
-      <div class="text-center mb-16">
+      <div class="text-center mb-10">
         <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
           Bibliothèque<br/>
           <span class="text-[#A898EE]">de leçons</span>
         </h1>
       </div>
 
-      {Object.entries(groupedLessons).map(([categoryName, categoryLessons]) => (
-        <section class="mb-16">
-          <h2 class="text-2xl font-black text-gray-900 mb-8">{categoryName}</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* @ts-ignore */}
-            {categoryLessons.map((lesson) => (
-              <div class="group relative bg-white rounded-3xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_32px_rgba(140,23,248,0.18)]">
-                
-                <div class="w-full aspect-square bg-[#A898EE]/5 rounded-2xl flex items-center justify-center mb-5 relative">
-                  <a href={`/lecon/${lesson.id}`} class="absolute inset-0 z-10"></a>
-                  
-                  <button 
-                    data-id={lesson.id} 
-                    class="lib-like-btn absolute top-3 right-3 z-20 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-300 hover:text-[#8C17F8] hover:scale-110 transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
-                  >
-                    <svg class="w-6 h-6 pointer-events-none fill-none transition-colors duration-300" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
-                    </svg>
-                  </button>
+      {/* --- MENU DE FILTRES DES CATÉGORIES --- */}
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="cat-filter-btn active-filter px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 bg-[#8C17F8] text-white shadow-md hover:-translate-y-0.5" data-target="all">
+          Toutes
+        </button>
+        {Object.keys(groupedLessons).map(cat => (
+          <button class="cat-filter-btn px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 hover:-translate-y-0.5" data-target={cat}>
+            {cat}
+          </button>
+        ))}
+      </div>
 
-                  <span class="text-5xl pointer-events-none">{lesson.emoji || '📖'}</span>
-                </div>
+      {/* --- LISTE DES LEÇONS --- */}
+      <div id="lessons-container">
+        {Object.entries(groupedLessons).map(([categoryName, categoryLessons]) => {
+          const categoryIcon = getCategoryIcon(categoryName);
+          
+          return (
+            <section class="category-section mb-16 animate-fade-in" data-category={categoryName}>
+              <h2 class="text-2xl font-black text-gray-900 mb-8 flex items-center gap-3">
+                {categoryIcon && <img src={categoryIcon} alt="" class="w-8 h-8 object-contain" />}
+                {categoryName}
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* @ts-ignore */}
+                {categoryLessons.map((lesson) => {
+                  const videoUrl = getVideoUrl(lesson);
+                  return (
+                    <div class="group relative bg-white rounded-3xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_32px_rgba(140,23,248,0.18)]">
+                      
+                      <div class="w-full aspect-square bg-[#A898EE]/5 rounded-2xl flex items-center justify-center mb-5 relative overflow-hidden">
+                        
+                        <button 
+                          class="open-video-btn absolute inset-0 z-10 w-full h-full cursor-pointer outline-none"
+                          data-video-url={videoUrl}
+                          data-video-title={lesson.title}
+                        ></button>
+                        
+                        <button 
+                          data-id={lesson.id} 
+                          class="lib-like-btn absolute top-3 right-3 z-20 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-300 hover:text-[#8C17F8] hover:scale-110 transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+                        >
+                          <svg class="w-6 h-6 pointer-events-none fill-none transition-colors duration-300" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                          </svg>
+                        </button>
 
-                <h3 class="text-xl font-black text-gray-900 px-2 group-hover:text-[#8C17F8] transition-colors duration-300">{lesson.title}</h3>
+                        {videoUrl ? (
+                          <>
+                            {/* Remplacement des emojis moches par l'icône de la catégorie en filigrane */}
+                            <div class="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0 pointer-events-none opacity-50">
+                              {categoryIcon ? (
+                                <img src={categoryIcon} class="w-16 h-16 object-contain mb-3 drop-shadow-sm grayscale opacity-60" alt="" />
+                              ) : (
+                                <svg class="w-12 h-12 text-[#A898EE] mb-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                              )}
+                              <span class="text-[10px] font-black text-[#A898EE] uppercase tracking-[0.2em] bg-[#A898EE]/10 px-3 py-1 rounded-full">Aperçu vidéo</span>
+                            </div>
+                            
+                            <video 
+                              data-hover-src={videoUrl}
+                              preload="none"
+                              class="lazy-hover-video absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                              muted 
+                              loop 
+                              playsinline
+                            ></video>
+
+                            <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                              <svg class="w-14 h-14 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          </>
+                        ) : (
+                          <span class="text-sm font-bold text-gray-400 pointer-events-none">Vidéo indisponible</span>
+                        )}
+
+                      </div>
+
+                      <h3 class="text-xl font-black text-gray-900 px-2 group-hover:text-[#8C17F8] transition-colors duration-300">{lesson.title}</h3>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-        </section>
-      ))}
+            </section>
+          );
+        })}
+      </div>
     </div>
+
+    {/* --- LE LECTEUR VIDÉO MODAL --- */}
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center bg-black/90 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+      <div id="modal-inner-card" class="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col scale-95 transition-transform duration-300">
+        
+        <div class="flex justify-between items-center p-4 border-b border-gray-100 bg-white relative z-50">
+          <h3 id="modal-title" class="text-2xl font-black text-[#8C17F8] ml-2">Titre</h3>
+          <button id="close-modal" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-gray-200 hover:text-red-500 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <div id="modal-video-container" class="w-full bg-black aspect-video flex items-center justify-center relative cursor-pointer group">
+          <video id="modal-video" class="w-full h-full object-contain" playsinline></video>
+
+          <div id="modal-play-pause-overlay" class="absolute inset-0 hidden items-center justify-center transition-all duration-300 pointer-events-none">
+            <svg id="modal-play-icon" class="w-20 h-20 text-white drop-shadow-lg hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="modal-pause-icon" class="w-20 h-20 text-white drop-shadow-lg hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </div>
+
+          <div id="modal-replay-overlay" class="absolute inset-0 bg-black/60 hidden items-center justify-center flex-col gap-4 transition-opacity z-20">
+            <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span class="text-white font-bold text-xl tracking-wide">Revoir le signe</span>
+          </div>
+
+          <div class="absolute bottom-0 left-0 w-full h-1.5 bg-white/20">
+            <div id="modal-video-progress" class="h-full bg-[#8C17F8] w-0 transition-all duration-75"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 </Layout>
 
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
   const start = async () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
     
+    // === 0. GESTION DES FILTRES DE CATÉGORIES ===
+    const filterBtns = document.querySelectorAll('.cat-filter-btn');
+    const sections = document.querySelectorAll('.category-section');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Mise à jour de l'apparence des boutons
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-[#8C17F8]', 'text-white', 'shadow-md', 'active-filter');
+          b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+        });
+        btn.classList.add('bg-[#8C17F8]', 'text-white', 'shadow-md', 'active-filter');
+        btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+
+        const target = btn.getAttribute('data-target');
+        
+        // Afficher ou masquer les sections concernées
+        sections.forEach(sec => {
+          const sectionElem = sec as HTMLElement;
+          if (target === 'all' || sec.getAttribute('data-category') === target) {
+            sectionElem.style.display = 'block';
+            // Relancer l'animation
+            sectionElem.classList.remove('animate-fade-in');
+            void sectionElem.offsetWidth; 
+            sectionElem.classList.add('animate-fade-in');
+          } else {
+            sectionElem.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // === 1. GESTION DES FAVORIS ===
     if (!pb.authStore.isValid || !pb.authStore.model) return;
     
     const userId = pb.authStore.model.id;
-    const btns = document.querySelectorAll('.lib-like-btn');
+    const favBtns = document.querySelectorAll('.lib-like-btn');
 
     try {
       const favs = await pb.collection('favorites').getFullList({ 
@@ -91,23 +249,19 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
       const favMap = new Map();
       favs.forEach(f => favMap.set(f.lecon, f.id));
 
-      btns.forEach(btn => {
+      favBtns.forEach(btn => {
         const lessonId = btn.getAttribute('data-id');
         const svg = btn.querySelector('svg');
         if (!lessonId || !svg) return;
 
         if (favMap.has(lessonId)) {
           btn.setAttribute('data-fav-id', favMap.get(lessonId));
-          btn.classList.remove('text-gray-300');
-          btn.classList.add('text-[#8C17F8]');
-          svg.classList.add('fill-current');
-          svg.classList.remove('fill-none');
+          btn.classList.replace('text-gray-300', 'text-[#8C17F8]');
+          svg.classList.replace('fill-none', 'fill-current');
         } else {
           btn.removeAttribute('data-fav-id');
-          btn.classList.add('text-gray-300');
-          btn.classList.remove('text-[#8C17F8]');
-          svg.classList.remove('fill-current');
-          svg.classList.add('fill-none');
+          btn.classList.replace('text-[#8C17F8]', 'text-gray-300');
+          svg.classList.replace('fill-current', 'fill-none');
         }
 
         const newBtn = btn.cloneNode(true) as HTMLElement;
@@ -120,30 +274,204 @@ const groupedLessons = lessons.reduce((acc: any, lesson) => {
           const currentFavId = newBtn.getAttribute('data-fav-id');
           const currentSvg = newBtn.querySelector('svg');
 
-          if (currentFavId) {
-            newBtn.removeAttribute('data-fav-id');
-            newBtn.classList.remove('text-[#8C17F8]');
-            newBtn.classList.add('text-gray-300');
-            currentSvg?.classList.remove('fill-current');
-            currentSvg?.classList.add('fill-none');
-            
-            await pb.collection('favorites').delete(currentFavId);
-          } else {
-            newBtn.classList.add('text-[#8C17F8]');
-            newBtn.classList.remove('text-gray-300');
-            currentSvg?.classList.add('fill-current');
-            currentSvg?.classList.remove('fill-none');
+          try {
+            if (currentFavId) {
+              newBtn.removeAttribute('data-fav-id');
+              newBtn.classList.replace('text-[#8C17F8]', 'text-gray-300');
+              currentSvg?.classList.replace('fill-current', 'fill-none');
+              
+              await pb.collection('favorites').delete(currentFavId);
+            } else {
+              newBtn.classList.replace('text-gray-300', 'text-[#8C17F8]');
+              currentSvg?.classList.replace('fill-none', 'fill-current');
 
-            const res = await pb.collection('favorites').create({ 
-              user: userId, 
-              lecon: lessonId
-            });
-            newBtn.setAttribute('data-fav-id', res.id);
+              const res = await pb.collection('favorites').create({ user: userId, lecon: lessonId });
+              newBtn.setAttribute('data-fav-id', res.id);
+            }
+          } catch (err) {
+            console.error("❌ Erreur favoris :", err);
+            if (currentFavId) {
+              newBtn.setAttribute('data-fav-id', currentFavId);
+              newBtn.classList.replace('text-gray-300', 'text-[#8C17F8]');
+              currentSvg?.classList.replace('fill-none', 'fill-current');
+            } else {
+              newBtn.classList.replace('text-[#8C17F8]', 'text-gray-300');
+              currentSvg?.classList.replace('fill-current', 'fill-none');
+            }
           }
         });
       });
     } catch (err) {
-      console.error("Erreur chargement favoris bibliothèque:", err);
+      console.error("Erreur chargement favoris:", err);
+    }
+
+    // === 2. OPTIMISATION : LAZY LOADING DES VIDÉOS AU SURVOL ===
+    const videoContainers = document.querySelectorAll('.group');
+    
+    videoContainers.forEach(container => {
+      const vid = container.querySelector('.lazy-hover-video') as HTMLVideoElement;
+      if (!vid) return;
+
+      container.addEventListener('mouseenter', () => {
+        const src = vid.getAttribute('data-hover-src');
+        if (src && !vid.src) {
+          vid.src = src;
+          vid.load();
+        }
+        vid.play().catch(() => {}); 
+      });
+
+      container.addEventListener('mouseleave', () => {
+        if (!vid.paused) {
+          vid.pause();
+        }
+      });
+    });
+
+    // === 3. GESTION DU LECTEUR VIDÉO MODAL ===
+    const videoBtns = document.querySelectorAll('.open-video-btn');
+    const videoModal = document.getElementById('video-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const modalVideo = document.getElementById('modal-video') as HTMLVideoElement;
+    const modalVideoContainer = document.getElementById('modal-video-container');
+    const modalInnerCard = document.getElementById('modal-inner-card');
+    const modalTitle = document.getElementById('modal-title');
+    
+    const modalProgress = document.getElementById('modal-video-progress');
+    const playPauseOverlay = document.getElementById('modal-play-pause-overlay');
+    const playIcon = document.getElementById('modal-play-icon');
+    const pauseIcon = document.getElementById('modal-pause-icon');
+    const replayOverlay = document.getElementById('modal-replay-overlay');
+    
+    let animFrameId: number;
+
+    const openVideoModal = (url: string, title: string) => {
+      if (!videoModal || !modalVideo || !modalTitle || !modalInnerCard || !modalProgress || !playPauseOverlay || !playIcon || !pauseIcon || !replayOverlay) return;
+      
+      modalTitle.textContent = title;
+      modalVideo.src = url;
+      modalProgress.style.width = '0%';
+      
+      playPauseOverlay.classList.remove('hidden', 'opacity-0');
+      playPauseOverlay.classList.add('bg-black/20');
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      replayOverlay.classList.add('hidden');
+      replayOverlay.classList.remove('flex');
+      
+      videoModal.classList.remove('hidden');
+      videoModal.classList.add('flex');
+      
+      setTimeout(() => {
+        videoModal.classList.remove('opacity-0');
+        modalInnerCard.classList.remove('scale-95');
+        modalInnerCard.classList.add('scale-100');
+        togglePlay(); 
+      }, 10);
+    };
+
+    const closeVideoModal = () => {
+      if (!videoModal || !modalVideo || !modalInnerCard) return;
+      
+      videoModal.classList.add('opacity-0');
+      modalInnerCard.classList.remove('scale-100');
+      modalInnerCard.classList.add('scale-95');
+      modalVideo.pause();
+      
+      setTimeout(() => {
+        videoModal.classList.add('hidden');
+        videoModal.classList.remove('flex');
+        modalVideo.src = ''; 
+      }, 300);
+    };
+
+    const togglePlay = () => {
+      if (!modalVideo || !playPauseOverlay || !playIcon || !pauseIcon) return;
+      
+      if (modalVideo.paused) {
+        modalVideo.play();
+        playPauseOverlay.classList.remove('bg-black/20');
+        playPauseOverlay.classList.add('opacity-0');
+        setTimeout(() => {
+          playIcon.classList.add('hidden');
+          pauseIcon.classList.remove('hidden');
+        }, 300);
+      } else {
+        modalVideo.pause();
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        playPauseOverlay.classList.remove('opacity-0');
+        playPauseOverlay.classList.add('bg-black/20');
+      }
+    };
+
+    const updateProgress = () => {
+      if (modalVideo && modalVideo.duration && modalProgress) {
+        modalProgress.style.width = `${(modalVideo.currentTime / modalVideo.duration) * 100}%`;
+      }
+      if (modalVideo && !modalVideo.paused && !modalVideo.ended) {
+        animFrameId = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    if (modalVideo) {
+      modalVideo.addEventListener('play', () => { animFrameId = requestAnimationFrame(updateProgress); });
+      modalVideo.addEventListener('pause', () => cancelAnimationFrame(animFrameId));
+      modalVideo.addEventListener('ended', () => {
+        cancelAnimationFrame(animFrameId);
+        if (modalProgress) modalProgress.style.width = '100%';
+        if (replayOverlay) {
+          replayOverlay.classList.remove('hidden');
+          replayOverlay.classList.add('flex');
+        }
+        if (playPauseOverlay) playPauseOverlay.classList.add('hidden');
+      });
+    }
+
+    if (modalVideoContainer) {
+      modalVideoContainer.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (modalVideo && !modalVideo.ended && !target.closest('#modal-replay-overlay')) {
+          togglePlay();
+        }
+      });
+    }
+
+    if (replayOverlay) {
+      replayOverlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        replayOverlay.classList.add('hidden');
+        replayOverlay.classList.remove('flex');
+        
+        if (playPauseOverlay && playIcon && pauseIcon && modalVideo) {
+          playPauseOverlay.classList.remove('hidden', 'bg-black/20');
+          playPauseOverlay.classList.add('opacity-0');
+          playIcon.classList.add('hidden');
+          pauseIcon.classList.remove('hidden');
+          modalVideo.currentTime = 0;
+          modalVideo.play();
+        }
+      });
+    }
+
+    videoBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = btn.getAttribute('data-video-url');
+        const title = btn.getAttribute('data-video-title');
+        if (url && title) openVideoModal(url, title);
+      });
+    });
+
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeVideoModal);
+    
+    if (videoModal && modalInnerCard) {
+      videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) closeVideoModal();
+      });
+      modalInnerCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     }
   };
 

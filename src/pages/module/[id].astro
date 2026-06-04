@@ -5,11 +5,11 @@ import Menu from '../../components/Menu.astro';
 import Sidebar from '../../components/Sidebar.astro'; 
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
 // 1. On dit à Astro de générer une page pour chaque module de ta base
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   const modules = await pb.collection('modules').getFullList();
   
   return modules.map((mod) => ({
@@ -114,7 +114,7 @@ try {
   import PocketBase from 'pocketbase';
   
   document.addEventListener('astro:page-load', async () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
     const likeBtn = document.getElementById('like-btn');
     
     if (!likeBtn) return;

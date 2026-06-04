@@ -20,7 +20,7 @@ import Sidebar from '../components/Sidebar.astro';
       <div class="w-full flex items-center justify-start mb-8">
         <button 
           onclick="history.back()" 
-          class="mr-3 text-gray-400 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
+          class="mr-3 text-gray-500 hover:text-[#8C17F8] transition-colors cursor-pointer border-none bg-transparent"
         >
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
@@ -31,58 +31,58 @@ import Sidebar from '../components/Sidebar.astro';
         </h1>
       </div>
 
-      <div class="bg-white rounded-[2rem] p-6 md:p-10 shadow-[0_15px_40px_rgba(140,23,248,0.1)] border border-gray-100 relative overflow-hidden">
+      <div class="bg-white rounded-[2rem] p-6 md:p-10 shadow-[0_20px_50px_rgba(140,23,248,0.15)] border border-gray-200 relative overflow-hidden">
         
-        <!-- MESSAGE DE SUCCÈS (Caché par défaut, et n'est plus en absolute) -->
+        <!-- MESSAGE DE SUCCÈS -->
         <div id="success-message" class="hidden flex-col items-center justify-center py-10 text-center animate-fade-in w-full">
-            <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-sm">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
             </div>
             <h3 class="text-3xl font-black text-gray-900 mb-2">Message envoyé !</h3>
-            <p class="text-gray-600 font-medium mb-8">
+            <p class="text-gray-700 font-medium mb-8">
                 Merci de nous avoir contactés. Nous avons bien reçu ton message et nous te répondrons très vite.
             </p>
-            <a href="/" class="bg-[#8C17F8] text-white px-8 py-3.5 rounded-full font-black text-lg transition-transform hover:-translate-y-1 hover:shadow-lg">
+            <a href="/" class="bg-[#8C17F8] text-white px-8 py-3.5 rounded-full font-black text-lg transition-transform hover:-translate-y-1 shadow-md hover:shadow-lg">
                 Retour à l'accueil
             </a>
         </div>
 
         <!-- FORMULAIRE -->
-        <form id="contact-form" class="flex flex-col gap-5 w-full">
+        <form id="contact-form" class="flex flex-col gap-6 w-full">
             
-            <p class="text-gray-600 font-medium mb-2">
-                Un bug ? Une suggestion ? Remplis ce formulaire pour envoyer un message direct à l'équipe.
+            <p class="text-gray-700 font-medium mb-2 leading-relaxed">
+                Un bug ? Une suggestion ? Remplis ce formulaire pour envoyer un message direct à l'équipe Kinezi.
             </p>
 
             <div class="flex flex-col md:flex-row gap-5">
-                <div class="flex-1 flex flex-col gap-1.5">
-                    <label for="name" class="text-sm font-bold text-gray-700 ml-1">Ton prénom</label>
-                    <input type="text" id="name" required placeholder="Ex: Enzo" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400" />
+                <div class="flex-1 flex flex-col gap-2">
+                    <label for="name" class="text-sm font-bold text-gray-800 ml-1">Ton prénom</label>
+                    <input type="text" id="name" required placeholder="Ex: Enzo" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400 shadow-sm" />
                 </div>
                 
-                <div class="flex-1 flex flex-col gap-1.5">
-                    <label for="email" class="text-sm font-bold text-gray-700 ml-1">Ton adresse email</label>
-                    <input type="email" id="email" required placeholder="exemple@mail.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400" />
+                <div class="flex-1 flex flex-col gap-2">
+                    <label for="email" class="text-sm font-bold text-gray-800 ml-1">Ton adresse email</label>
+                    <input type="email" id="email" required placeholder="exemple@mail.com" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400 shadow-sm" />
                 </div>
             </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label for="subject" class="text-sm font-bold text-gray-700 ml-1">Sujet de ta demande</label>
-                <select id="subject" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-bold text-gray-900 transition-all appearance-none cursor-pointer">
+            <div class="flex flex-col gap-2">
+                <label for="subject" class="text-sm font-bold text-gray-800 ml-1">Sujet de ta demande</label>
+                <select id="subject" required class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] font-bold text-gray-900 transition-all appearance-none cursor-pointer shadow-sm">
                     <option value="" disabled selected>Choisis une option...</option>
                     <option value="Bug technique">Bug technique</option>
-                    <option value="Suggestion de mini-jeu">Suggestion de fonctionnalité</option>
+                    <option value="Suggestion de fonctionnalité">Suggestion de fonctionnalité</option>
                     <option value="Question sur le compte">Question sur mon compte</option>
                     <option value="Autre">Autre</option>
                 </select>
             </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label for="message" class="text-sm font-bold text-gray-700 ml-1">Ton message</label>
-                <textarea id="message" required rows="5" placeholder="Explique-nous tout en détail..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#8C17F8]/30 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400 resize-none"></textarea>
+            <div class="flex flex-col gap-2">
+                <label for="message" class="text-sm font-bold text-gray-800 ml-1">Ton message</label>
+                <textarea id="message" required rows="5" placeholder="Explique-nous tout en détail..." class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3.5 outline-none focus:ring-4 focus:ring-[#8C17F8]/20 focus:border-[#8C17F8] font-medium text-gray-900 transition-all placeholder-gray-400 resize-none shadow-sm"></textarea>
             </div>
 
-            <button type="submit" id="submit-btn" class="mt-2 w-full bg-[#8C17F8] text-white px-8 py-4 rounded-xl font-black text-lg transition-transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(140,23,248,0.3)] active:scale-95 flex items-center justify-center gap-2">
+            <button type="submit" id="submit-btn" class="mt-2 w-full bg-[#8C17F8] text-white px-8 py-4 rounded-xl font-black text-lg transition-transform hover:-translate-y-1 shadow-md hover:shadow-xl active:scale-95 flex items-center justify-center gap-3">
                 <span>Envoyer le message</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
             </button>
@@ -95,11 +95,10 @@ import Sidebar from '../components/Sidebar.astro';
 </Layout>
 
 <script>
-  import PocketBase from 'pocketbase';
+  // Importation de PocketBase en ligne
+  import { pb } from '../lib/pb.js';
 
   document.addEventListener('DOMContentLoaded', () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
-
     const nameInput = document.getElementById('name') as HTMLInputElement;
     const emailInput = document.getElementById('email') as HTMLInputElement;
     const form = document.getElementById('contact-form') as HTMLFormElement;
@@ -116,7 +115,7 @@ import Sidebar from '../components/Sidebar.astro';
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Bloquer le bouton pendant l'envoi pour éviter les doubles clics
+            // Bloquer le bouton pendant l'envoi
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = "Envoi en cours...";
@@ -134,8 +133,23 @@ import Sidebar from '../components/Sidebar.astro';
             };
 
             try {
-                // Envoi à PocketBase dans la collection "contacts"
+                // 1. Sauvegarde dans la collection "contacts" sur PocketBase
                 await pb.collection('contacts').create(data);
+
+                // 2. Envoi réel de l'email vers opensigne@gmail.com via FormSubmit
+                await fetch("https://formsubmit.co/ajax/opensigne@gmail.com", {
+                    method: "POST",
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Nom: data.name,
+                        Email: data.email,
+                        Sujet: data.subject,
+                        Message: data.message
+                    })
+                });
                 
                 // Afficher l'écran de succès
                 form.classList.add('hidden');
@@ -146,7 +160,7 @@ import Sidebar from '../components/Sidebar.astro';
                 console.error("Erreur d'envoi :", error);
                 alert("Une erreur s'est produite lors de l'envoi du message. Vérifie ta connexion.");
                 
-                // Réactiver le bouton
+                // Réactiver le bouton en cas d'erreur
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `<span>Envoyer le message</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>`;

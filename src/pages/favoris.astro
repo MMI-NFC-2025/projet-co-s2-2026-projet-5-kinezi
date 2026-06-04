@@ -2,20 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/SiteHeader.astro'; 
 import Menu from '../components/Menu.astro';     
-import Sidebar from '../components/Sidebar.astro'; 
 ---
 
-<Layout title="Leçons préférées | Kinezi">
+<Layout title="Leçons préférées | OpenSigne">
   
   <Header />
   <Menu />
-  <Sidebar />
 
-  {/* CORRECTION : Fond blanc pur bg-[#FFFFFF] */}
-  <main class="min-h-screen bg-[#FFFFFF] md:ml-20 pt-8 pb-24 px-6 md:px-12 relative overflow-hidden">
-    <div class="max-w-[1000px] mx-auto relative z-10">
+  <main class="min-h-screen bg-[#FFFFFF] pt-24 pb-24 px-6 md:px-12 relative overflow-hidden">
+    <div class="max-w-[1100px] mx-auto relative z-10">
       
-      <div class="text-center mb-16">
+      <div class="text-center mb-16 animate-fade-in">
         <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
           Leçons<br/>
           <span class="text-[#A898EE]">préférées</span>
@@ -23,32 +20,80 @@ import Sidebar from '../components/Sidebar.astro';
         <p class="mt-4 text-gray-500 font-medium text-lg">Retrouve ici tous les signes que tu as aimés.</p>
       </div>
 
-      <div id="status-container" class="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+      <div id="status-container" class="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm animate-slide-up">
         <p id="status-text" class="text-xl text-gray-500 font-medium">Chargement de tes favoris...</p>
         
         <div id="explore-link-wrapper" class="hidden mt-6">
-          <a href="/bibliotheque" class="inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-all shadow-md hover:shadow-lg">
+          <a href="/bibliotheque" class="inline-block bg-[#A898EE] text-white font-bold py-3 px-8 rounded-full hover:bg-[#9685db] transition-all shadow-md hover:shadow-lg hover:-translate-y-1 active:scale-95">
             Explorer la bibliothèque
           </a>
         </div>
       </div>
 
-      <div id="fav-grid-wrapper" class="hidden">
+      <div id="fav-grid-wrapper" class="hidden animate-slide-up">
         <div id="fav-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Les cartes seront injectées ici par JavaScript */}
         </div>
       </div>
 
     </div>
+
+    {/* --- LE LECTEUR VIDÉO MODAL --- */}
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center bg-black/90 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+      <div id="modal-inner-card" class="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col scale-95 transition-transform duration-300">
+        
+        <div class="flex justify-between items-center p-4 border-b border-gray-100 bg-white relative z-50">
+          <h3 id="modal-title" class="text-2xl font-black text-[#8C17F8] ml-2">Titre</h3>
+          <button id="close-modal" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-gray-200 hover:text-red-500 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <div id="modal-video-container" class="w-full bg-black aspect-video flex items-center justify-center relative cursor-pointer group">
+          <video id="modal-video" class="w-full h-full object-contain" playsinline></video>
+
+          <div id="modal-play-pause-overlay" class="absolute inset-0 hidden items-center justify-center transition-all duration-300 pointer-events-none">
+            <svg id="modal-play-icon" class="w-20 h-20 text-white drop-shadow-lg hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="modal-pause-icon" class="w-20 h-20 text-white drop-shadow-lg hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </div>
+
+          <div id="modal-replay-overlay" class="absolute inset-0 bg-black/60 hidden items-center justify-center flex-col gap-4 transition-opacity z-20">
+            <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span class="text-white font-bold text-xl tracking-wide">Revoir le signe</span>
+          </div>
+
+          <div class="absolute bottom-0 left-0 w-full h-1.5 bg-white/20">
+            <div id="modal-video-progress" class="h-full bg-[#8C17F8] w-0 transition-all duration-75"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 </Layout>
+
+<style is:global>
+  .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.6s ease-out forwards; animation-delay: 0.1s; opacity: 0; }
+  
+  @keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+  
+  @keyframes slideUp { 
+    from { opacity: 0; transform: translateY(30px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+</style>
 
 <script>
   import PocketBase from 'pocketbase';
 
-  const renderFavorites = async () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
+  const initFavorites = async () => {
+    const pb = new PocketBase('https://pbopensigne.lilian-maitre.fr');
     
-    // On cible nos nouveaux wrappers
     const gridWrapper = document.getElementById('fav-grid-wrapper');
     const grid = document.getElementById('fav-grid');
     const statusContainer = document.getElementById('status-container');
@@ -69,8 +114,6 @@ import Sidebar from '../components/Sidebar.astro';
         sort: '-created',
       });
 
-      console.log("Records trouvés:", records);
-
       if (records.length === 0) {
         statusText.textContent = "Tu n'as pas encore de leçons préférées.";
         if (exploreWrapper) exploreWrapper.classList.remove('hidden');
@@ -82,26 +125,56 @@ import Sidebar from '../components/Sidebar.astro';
         const lesson = reg.expand?.lecon;
         
         if (lesson) {
-          // CORRECTION ICI : Application des classes premium (shadow, border, etc.)
+          const videoUrl = lesson.video ? pb.files.getUrl(lesson, lesson.video) : '';
+
           html += `
-            <div id="card-${reg.id}" class="group relative bg-white rounded-3xl p-4 border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_32px_rgba(140,23,248,0.18)]">
+            <div id="card-${reg.id}" class="group relative bg-white rounded-3xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_32px_rgba(140,23,248,0.18)]">
               
-              <div class="w-full aspect-square bg-[#A898EE]/5 rounded-2xl mb-5 flex items-center justify-center text-6xl relative overflow-hidden block">
-                <a href="/lecon/${lesson.id}" class="absolute inset-0 z-10"></a>
-                <span class="group-hover:scale-110 transition-transform duration-500 pointer-events-none">${lesson.emoji || '📚'}</span>
-              </div>
-              
-              <div class="flex items-center gap-3 px-2">
-                <button data-id="${reg.id}" class="remove-btn z-20 relative text-[#8C17F8] hover:scale-125 transition-transform cursor-pointer focus:outline-none" title="Retirer des favoris">
-                  <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              <div class="w-full aspect-square bg-[#A898EE]/5 rounded-2xl flex items-center justify-center mb-5 relative overflow-hidden">
+                
+                <button 
+                  class="open-video-btn absolute inset-0 z-10 w-full h-full cursor-pointer outline-none"
+                  data-video-url="${videoUrl}"
+                  data-video-title="${lesson.title}"
+                ></button>
+                
+                <button 
+                  data-id="${reg.id}" 
+                  class="remove-btn absolute top-3 right-3 z-20 w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#8C17F8] hover:text-red-500 hover:scale-110 transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+                  title="Retirer des favoris"
+                >
+                  <svg class="w-6 h-6 fill-current pointer-events-none transition-colors duration-300" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
                   </svg>
                 </button>
-                <a href="/lecon/${lesson.id}" class="text-xl font-black text-gray-900 truncate flex-1 hover:text-[#A898EE] transition-colors z-20 relative">
-                  ${lesson.title}
-                </a>
+
+                ${videoUrl ? `
+                  <div class="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0 pointer-events-none opacity-50">
+                    <svg class="w-12 h-12 text-[#A898EE] mb-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <span class="text-[10px] font-black text-[#A898EE] uppercase tracking-[0.2em] bg-[#A898EE]/10 px-3 py-1 rounded-full">Aperçu vidéo</span>
+                  </div>
+                  
+                  <video 
+                    data-hover-src="${videoUrl}"
+                    preload="none"
+                    class="lazy-hover-video absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    muted 
+                    loop 
+                    playsinline
+                  ></video>
+
+                  <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    <svg class="w-14 h-14 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                ` : `
+                  <span class="text-sm font-bold text-gray-400 pointer-events-none">Vidéo indisponible</span>
+                `}
+
               </div>
-              
+
+              <h3 class="text-xl font-black text-gray-900 px-2 group-hover:text-[#8C17F8] transition-colors duration-300">${lesson.title}</h3>
             </div>
           `;
         }
@@ -111,10 +184,20 @@ import Sidebar from '../components/Sidebar.astro';
         grid.innerHTML = html;
         if (gridWrapper) gridWrapper.classList.remove('hidden');
         statusContainer.classList.add('hidden');
+        
+        attachEventListeners(); // On attache les événements une fois le HTML généré
       } else {
         statusText.textContent = "Erreur de chargement des données des leçons.";
       }
 
+    } catch (error) {
+      console.error("Erreur globale page favoris:", error);
+      statusText.textContent = "Une erreur est survenue lors de la récupération des favoris.";
+    }
+
+    // --- FONCTION POUR ATTACHER LES ÉVÉNEMENTS APRÈS LE RENDU ---
+    function attachEventListeners() {
+      // 1. SUPPRESSION DES FAVORIS
       document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const id = btn.getAttribute('data-id');
@@ -122,26 +205,197 @@ import Sidebar from '../components/Sidebar.astro';
 
           try {
             const card = document.getElementById(`card-${id}`);
-            if (card) card.style.opacity = "0.3";
+            if (card) {
+                card.style.transform = "scale(0.9)";
+                card.style.opacity = "0";
+            }
             
             await pb.collection('favorites').delete(id);
-            card?.remove();
-
-            if (grid.querySelectorAll('[id^="card-"]').length === 0) {
-              window.location.reload();
-            }
+            
+            setTimeout(() => {
+                card?.remove();
+                if (grid?.querySelectorAll('[id^="card-"]').length === 0) {
+                  window.location.reload();
+                }
+            }, 300);
+            
           } catch (err) {
             console.error("Erreur suppression:", err);
           }
         });
       });
 
-    } catch (error) {
-      console.error("Erreur globale page favoris:", error);
-      statusText.textContent = "Une erreur est survenue lors de la récupération des favoris.";
+      // 2. SURVOL POUR JOUER LA VIDÉO
+      const videoContainers = document.querySelectorAll('.group');
+      videoContainers.forEach(container => {
+        const vid = container.querySelector('.lazy-hover-video') as HTMLVideoElement;
+        if (!vid) return;
+
+        container.addEventListener('mouseenter', () => {
+          const src = vid.getAttribute('data-hover-src');
+          if (src && !vid.src) {
+            vid.src = src;
+            vid.load();
+          }
+          vid.play().catch(() => {}); 
+        });
+
+        container.addEventListener('mouseleave', () => {
+          if (!vid.paused) {
+            vid.pause();
+          }
+        });
+      });
+
+      // 3. OUVERTURE DU LECTEUR MODAL
+      const videoBtns = document.querySelectorAll('.open-video-btn');
+      videoBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const url = btn.getAttribute('data-video-url');
+          const title = btn.getAttribute('data-video-title');
+          if (url && title) openVideoModal(url, title);
+        });
+      });
+    }
+
+    // --- LOGIQUE DU LECTEUR VIDÉO MODAL ---
+    const videoModal = document.getElementById('video-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const modalVideo = document.getElementById('modal-video') as HTMLVideoElement;
+    const modalVideoContainer = document.getElementById('modal-video-container');
+    const modalInnerCard = document.getElementById('modal-inner-card');
+    const modalTitle = document.getElementById('modal-title');
+    
+    const modalProgress = document.getElementById('modal-video-progress');
+    const playPauseOverlay = document.getElementById('modal-play-pause-overlay');
+    const playIcon = document.getElementById('modal-play-icon');
+    const pauseIcon = document.getElementById('modal-pause-icon');
+    const replayOverlay = document.getElementById('modal-replay-overlay');
+    
+    let animFrameId: number;
+
+    const openVideoModal = (url: string, title: string) => {
+      if (!videoModal || !modalVideo || !modalTitle || !modalInnerCard || !modalProgress || !playPauseOverlay || !playIcon || !pauseIcon || !replayOverlay) return;
+      
+      modalTitle.textContent = title;
+      modalVideo.src = url;
+      modalProgress.style.width = '0%';
+      
+      playPauseOverlay.classList.remove('hidden', 'opacity-0');
+      playPauseOverlay.classList.add('bg-black/20');
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      replayOverlay.classList.add('hidden');
+      replayOverlay.classList.remove('flex');
+      
+      videoModal.classList.remove('hidden');
+      videoModal.classList.add('flex');
+      
+      setTimeout(() => {
+        videoModal.classList.remove('opacity-0');
+        modalInnerCard.classList.remove('scale-95');
+        modalInnerCard.classList.add('scale-100');
+        togglePlay(); 
+      }, 10);
+    };
+
+    const closeVideoModal = () => {
+      if (!videoModal || !modalVideo || !modalInnerCard) return;
+      
+      videoModal.classList.add('opacity-0');
+      modalInnerCard.classList.remove('scale-100');
+      modalInnerCard.classList.add('scale-95');
+      modalVideo.pause();
+      
+      setTimeout(() => {
+        videoModal.classList.add('hidden');
+        videoModal.classList.remove('flex');
+        modalVideo.src = ''; 
+      }, 300);
+    };
+
+    const togglePlay = () => {
+      if (!modalVideo || !playPauseOverlay || !playIcon || !pauseIcon) return;
+      
+      if (modalVideo.paused) {
+        modalVideo.play();
+        playPauseOverlay.classList.remove('bg-black/20');
+        playPauseOverlay.classList.add('opacity-0');
+        setTimeout(() => {
+          playIcon.classList.add('hidden');
+          pauseIcon.classList.remove('hidden');
+        }, 300);
+      } else {
+        modalVideo.pause();
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        playPauseOverlay.classList.remove('opacity-0');
+        playPauseOverlay.classList.add('bg-black/20');
+      }
+    };
+
+    const updateProgress = () => {
+      if (modalVideo && modalVideo.duration && modalProgress) {
+        modalProgress.style.width = `${(modalVideo.currentTime / modalVideo.duration) * 100}%`;
+      }
+      if (modalVideo && !modalVideo.paused && !modalVideo.ended) {
+        animFrameId = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    if (modalVideo) {
+      modalVideo.addEventListener('play', () => { animFrameId = requestAnimationFrame(updateProgress); });
+      modalVideo.addEventListener('pause', () => cancelAnimationFrame(animFrameId));
+      modalVideo.addEventListener('ended', () => {
+        cancelAnimationFrame(animFrameId);
+        if (modalProgress) modalProgress.style.width = '100%';
+        if (replayOverlay) {
+          replayOverlay.classList.remove('hidden');
+          replayOverlay.classList.add('flex');
+        }
+        if (playPauseOverlay) playPauseOverlay.classList.add('hidden');
+      });
+    }
+
+    if (modalVideoContainer) {
+      modalVideoContainer.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (modalVideo && !modalVideo.ended && !target.closest('#modal-replay-overlay')) {
+          togglePlay();
+        }
+      });
+    }
+
+    if (replayOverlay) {
+      replayOverlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        replayOverlay.classList.add('hidden');
+        replayOverlay.classList.remove('flex');
+        
+        if (playPauseOverlay && playIcon && pauseIcon && modalVideo) {
+          playPauseOverlay.classList.remove('hidden', 'bg-black/20');
+          playPauseOverlay.classList.add('opacity-0');
+          playIcon.classList.add('hidden');
+          pauseIcon.classList.remove('hidden');
+          modalVideo.currentTime = 0;
+          modalVideo.play();
+        }
+      });
+    }
+
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeVideoModal);
+    
+    if (videoModal && modalInnerCard) {
+      videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) closeVideoModal();
+      });
+      modalInnerCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     }
   };
 
-  renderFavorites();
-  document.addEventListener('astro:page-load', renderFavorites);
+  initFavorites();
+  document.addEventListener('astro:page-load', initFavorites);
 </script>

@@ -5,7 +5,7 @@ import Menu from '../components/Menu.astro';
 import Sidebar from '../components/Sidebar.astro'; 
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
 let leaderboard: any[] = [];
 
@@ -136,7 +136,7 @@ const getMedalStyles = (rank: number) => {
   import PocketBase from 'pocketbase';
 
   const highlightMe = () => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
     
     if (pb.authStore.isValid && pb.authStore.model) {
       const myId = pb.authStore.model.id;
