@@ -6,13 +6,19 @@ import Sidebar from '../../components/Sidebar.astro';
 import PocketBase from 'pocketbase';
 
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-  const categories = await pb.collection('categories').getFullList();
-  
-  return categories.map((cat) => ({
-    params: { id: cat.slug || cat.id },
-    props: { category: cat },
-  }));
+  try {
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
+    const categories = await pb.collection('categories').getFullList();
+    
+    return categories.map((cat) => ({
+      params: { id: cat.slug || cat.id },
+      props: { category: cat },
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la récupération des catégories:", error);
+    // Retourner un tableau vide en cas d'erreur pour permettre au build de continuer
+    return [];
+  }
 }
 
 const { category } = Astro.props;

@@ -7,16 +7,22 @@ import PocketBase from 'pocketbase';
 
 // 1. Génération des routes dynamiques pour chaque leçon
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-  
-  // On récupère toutes les leçons de PocketBase
-  const lessons = await pb.collection('lessons').getFullList();
-  
-  // On crée une page pour chaque leçon (via son slug ou son id)
-  return lessons.map((lesson) => ({
-    params: { id: lesson.slug || lesson.id },
-    props: { lesson },
-  }));
+  try {
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
+    
+    // On récupère toutes les leçons de PocketBase
+    const lessons = await pb.collection('lessons').getFullList();
+    
+    // On crée une page pour chaque leçon (via son slug ou son id)
+    return lessons.map((lesson) => ({
+      params: { id: lesson.slug || lesson.id },
+      props: { lesson },
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la récupération des leçons:", error);
+    // Retourner un tableau vide en cas d'erreur pour permettre au build de continuer
+    return [];
+  }
 }
 
 // 2. Récupération de la leçon courante et initialisation du SDK PocketBase

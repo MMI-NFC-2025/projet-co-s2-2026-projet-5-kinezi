@@ -9,13 +9,19 @@ const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
 // 1. On dit à Astro de générer une page pour chaque module de ta base
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-  const modules = await pb.collection('modules').getFullList();
-  
-  return modules.map((mod) => ({
-    params: { id: mod.id }, // L'URL sera /module/l-id-du-module
-    props: { moduleData: mod },
-  }));
+  try {
+    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
+    const modules = await pb.collection('modules').getFullList();
+    
+    return modules.map((mod) => ({
+      params: { id: mod.id }, // L'URL sera /module/l-id-du-module
+      props: { moduleData: mod },
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la récupération des modules:", error);
+    // Retourner un tableau vide en cas d'erreur pour permettre au build de continuer
+    return [];
+  }
 }
 
 const { moduleData } = Astro.props;
