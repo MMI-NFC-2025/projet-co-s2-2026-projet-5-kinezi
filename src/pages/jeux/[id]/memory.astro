@@ -3,12 +3,11 @@ import Layout from '../../../layouts/Layout.astro';
 import Header from '../../../components/SiteHeader.astro';
 import Menu from '../../../components/Menu.astro';    
 import Sidebar from '../../../components/Sidebar.astro';
-import PocketBase from 'pocketbase';
+import { pb } from '../../../lib/pb.js';
 
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   const categories = await pb.collection('categories').getFullList();
- 
+  
   return categories.map((cat) => ({
     params: { id: cat.slug || cat.id },
     props: { category: cat },
@@ -16,7 +15,6 @@ export async function getStaticPaths() {
 }
 
 const { category } = Astro.props;
-const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
 let lessons: any[] = [];
 try {
@@ -456,13 +454,11 @@ try {
 </script>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../../../lib/pb.js';
 
   document.addEventListener('memory-game-won', async (e: Event) => {
     const customEvent = e as CustomEvent;
     const xpReward = customEvent.detail.xp;
-   
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 
     if (!pb.authStore.isValid) {
       console.warn("Utilisateur non connecté, impossible d'ajouter l'XP.");
@@ -470,12 +466,12 @@ try {
     }
 
     const user: any = pb.authStore.model;
-   
+    
     if (!user || !user.id) return;
 
     try {
       const freshUser = await pb.collection('users').getOne(user.id);
-     
+      
       const newXp = (freshUser.xp || 0) + xpReward;
 
       const updatedUser = await pb.collection('users').update(user.id, {

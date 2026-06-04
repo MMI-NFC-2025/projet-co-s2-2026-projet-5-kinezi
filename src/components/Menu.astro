@@ -122,12 +122,9 @@ const getSpanClass = (path: string) => {
 </aside>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
   const initSideMenu = async () => {
-    const pb = new PocketBase('https://pbopensigne.lilian-maitre.fr');
-    
-    // --- 1. CHARGEMENT DES DONNÉES UTILISATEUR ---
     const nameElement = document.getElementById('menu-user-name');
     
     if (pb.authStore.isValid && pb.authStore.model) {
@@ -148,7 +145,6 @@ const getSpanClass = (path: string) => {
       if (nameElement) nameElement.textContent = 'Non connecté';
     }
 
-    // --- 2. LOGIQUE DE DÉCONNEXION ---
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
       logoutBtn.onclick = (e) => {
@@ -158,7 +154,6 @@ const getSpanClass = (path: string) => {
       };
     }
 
-    // --- 3. LOGIQUE OUVERTURE/FERMETURE ---
     const menuBtn = document.getElementById('menu-btn');
     const closeBtn = document.getElementById('close-menu-btn');
     const sideMenu = document.getElementById('side-menu');
@@ -186,7 +181,6 @@ const getSpanClass = (path: string) => {
     if (menuOverlay) menuOverlay.onclick = toggleMenu;
   };
 
-  // Lancement et gestion du routage Astro
   initSideMenu();
   document.addEventListener('astro:page-load', initSideMenu);
 </script>

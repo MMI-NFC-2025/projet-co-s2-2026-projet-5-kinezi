@@ -11,21 +11,16 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
   const logout = () => {
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-    
-    // 1. On efface le token du localStorage
     pb.authStore.clear();
 
-    // 2. On attend un tout petit peu pour le visuel et on redirige
     setTimeout(() => {
       window.location.href = '/';
     }, 800);
   };
 
   logout();
-  // Support pour Astro View Transitions
   document.addEventListener('astro:page-load', logout);
 </script>

@@ -3,35 +3,28 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/SiteHeader.astro'; 
 import Menu from '../../components/Menu.astro';     
 import Sidebar from '../../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
+import { pb } from '../../lib/pb.js';
 
-const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-
-// 1. On dit à Astro de générer une page pour chaque module de ta base
 export async function getStaticPaths() {
   try {
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
     const modules = await pb.collection('modules').getFullList();
     
     return modules.map((mod) => ({
-      params: { id: mod.id }, // L'URL sera /module/l-id-du-module
+      params: { id: mod.id },
       props: { moduleData: mod },
     }));
   } catch (error) {
     console.error("Erreur lors de la récupération des modules:", error);
-    // Retourner un tableau vide en cas d'erreur pour permettre au build de continuer
     return [];
   }
 }
 
 const { moduleData } = Astro.props;
 
-// 2. On récupère les leçons qui appartiennent SEULEMENT à ce module
-// Sécurité TypeScript : On précise que c'est un tableau
 let subLessons: any[] = []; 
 try {
   subLessons = await pb.collection('lessons').getFullList({
-    filter: `module = "${moduleData.id}"`, // La relation qu'on a créée !
+    filter: `module = "${moduleData.id}"`,
     sort: 'created',
   });
 } catch (error) {
@@ -114,12 +107,10 @@ try {
   </main>
 </Layout>
 
-{/* --- LE SCRIPT QUI PARLE À POCKETBASE --- */}
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../../lib/pb.js';
   
   document.addEventListener('astro:page-load', async () => {
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
     const likeBtn = document.getElementById('like-btn');
     
     if (!likeBtn) return;
@@ -135,19 +126,16 @@ try {
         const record = await pb.collection('favorites').getFirstListItem(`user="${userId}" && module="${moduleId}"`);
         favoriteRecordId = record.id;
         
-        // État LIKÉ (Violet sombre au chargement)
         likeBtn.classList.add('border-[#533483]', 'bg-[#533483]/10', 'text-[#533483]');
         likeBtn.classList.remove('border-gray-200', 'bg-white', 'text-gray-400');
         if (svg) svg.setAttribute('fill', 'currentColor');
       } catch (e) {
-        // L'utilisateur n'a pas encore liké ce module
       }
 
       likeBtn.addEventListener('click', async () => {
         const isCurrentlyLiked = !!favoriteRecordId;
         
         if (isCurrentlyLiked) {
-          // Retire le style Violet Sombre
           likeBtn.classList.remove('border-[#533483]', 'bg-[#533483]/10', 'text-[#533483]');
           likeBtn.classList.add('border-gray-200', 'bg-white', 'text-gray-400');
           if (svg) svg.setAttribute('fill', 'none');
@@ -157,7 +145,6 @@ try {
             favoriteRecordId = null;
           }
         } else {
-          // Ajoute le style Violet Sombre
           likeBtn.classList.add('border-[#533483]', 'bg-[#533483]/10', 'text-[#533483]');
           likeBtn.classList.remove('border-gray-200', 'bg-white', 'text-gray-400');
           if (svg) svg.setAttribute('fill', 'currentColor');

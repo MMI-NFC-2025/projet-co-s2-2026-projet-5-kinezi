@@ -3,14 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/SiteHeader.astro'; 
 import Menu from '../components/Menu.astro';     
 import Sidebar from '../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
-
-const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
+import { pb } from '../lib/pb.js';
 
 let leaderboard: any[] = [];
 
 try {
-  // Changement ici : On trie par '-xp' pour avoir les meilleurs scores en premier
   const records = await pb.collection('users').getList(1, 50, {
     sort: '-xp', 
   });
@@ -19,7 +16,7 @@ try {
     id: user.id,
     rank: index + 1,
     name: user.first_name || user.username || user.name || 'Utilisateur',
-    xp: user.xp || 0, // Récupération de l'XP
+    xp: user.xp || 0,
     avatar: user.avatar ? pb.files.getUrl(user, user.avatar) : null
   }));
 
@@ -133,18 +130,14 @@ const getMedalStyles = (rank: number) => {
 </style>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
   const highlightMe = () => {
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-    
     if (pb.authStore.isValid && pb.authStore.model) {
       const myId = pb.authStore.model.id;
       const myRow = document.querySelector(`[data-user-row="${myId}"]`);
       
       if (myRow) {
-        
-        // La ligne active garde son superbe design violet
         myRow.className = "user-row flex items-center gap-4 md:gap-6 px-4 md:px-6 py-4 rounded-[2rem] transition-all duration-300 bg-gradient-to-r from-[#8C17F8] to-[#A898EE] text-white shadow-[0_10px_30px_-10px_rgba(140,23,248,0.6)] border border-transparent scale-[1.02] relative z-20 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(140,23,248,0.7)] animate-slide-up";
         
         const avatarBorder = myRow.querySelector('.avatar-border');
@@ -167,7 +160,6 @@ const getMedalStyles = (rank: number) => {
            rankText.className = "text-white font-black drop-shadow-sm";
         }
 
-        // Coloration de l'XP pour l'utilisateur connecté
         const xpBadge = myRow.querySelector('.xp-badge');
         if (xpBadge) {
           xpBadge.className = xpBadge.className.replace(/bg-\[.*?\]|border-\[.*?\]/g, '');

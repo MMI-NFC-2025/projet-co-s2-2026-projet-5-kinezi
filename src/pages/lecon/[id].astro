@@ -3,31 +3,23 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/SiteHeader.astro'; 
 import Menu from '../../components/Menu.astro';     
 import Sidebar from '../../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
+import { pb } from '../../lib/pb.js';
 
-// 1. Génération des routes dynamiques pour chaque leçon
 export async function getStaticPaths() {
   try {
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-    
-    // On récupère toutes les leçons de PocketBase
     const lessons = await pb.collection('lessons').getFullList();
     
-    // On crée une page pour chaque leçon (via son slug ou son id)
     return lessons.map((lesson) => ({
       params: { id: lesson.slug || lesson.id },
       props: { lesson },
     }));
   } catch (error) {
     console.error("Erreur lors de la récupération des leçons:", error);
-    // Retourner un tableau vide en cas d'erreur pour permettre au build de continuer
     return [];
   }
 }
 
-// 2. Récupération de la leçon courante et initialisation du SDK PocketBase
 const { lesson } = Astro.props;
-const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
 ---
 
 <Layout title={`${lesson.title} | Dictionnaire Kinezi`}>

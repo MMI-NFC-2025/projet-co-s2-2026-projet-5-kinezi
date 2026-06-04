@@ -89,11 +89,9 @@ import Menu from '../components/Menu.astro';
 </style>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
   const initFavorites = async () => {
-    const pb = new PocketBase('https://pbopensigne.lilian-maitre.fr');
-    
     const gridWrapper = document.getElementById('fav-grid-wrapper');
     const grid = document.getElementById('fav-grid');
     const statusContainer = document.getElementById('status-container');
@@ -185,7 +183,7 @@ import Menu from '../components/Menu.astro';
         if (gridWrapper) gridWrapper.classList.remove('hidden');
         statusContainer.classList.add('hidden');
         
-        attachEventListeners(); // On attache les événements une fois le HTML généré
+        attachEventListeners();
       } else {
         statusText.textContent = "Erreur de chargement des données des leçons.";
       }
@@ -195,9 +193,7 @@ import Menu from '../components/Menu.astro';
       statusText.textContent = "Une erreur est survenue lors de la récupération des favoris.";
     }
 
-    // --- FONCTION POUR ATTACHER LES ÉVÉNEMENTS APRÈS LE RENDU ---
     function attachEventListeners() {
-      // 1. SUPPRESSION DES FAVORIS
       document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const id = btn.getAttribute('data-id');
@@ -225,7 +221,6 @@ import Menu from '../components/Menu.astro';
         });
       });
 
-      // 2. SURVOL POUR JOUER LA VIDÉO
       const videoContainers = document.querySelectorAll('.group');
       videoContainers.forEach(container => {
         const vid = container.querySelector('.lazy-hover-video') as HTMLVideoElement;
@@ -247,7 +242,6 @@ import Menu from '../components/Menu.astro';
         });
       });
 
-      // 3. OUVERTURE DU LECTEUR MODAL
       const videoBtns = document.querySelectorAll('.open-video-btn');
       videoBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -259,7 +253,6 @@ import Menu from '../components/Menu.astro';
       });
     }
 
-    // --- LOGIQUE DU LECTEUR VIDÉO MODAL ---
     const videoModal = document.getElementById('video-modal');
     const closeModalBtn = document.getElementById('close-modal');
     const modalVideo = document.getElementById('modal-video') as HTMLVideoElement;

@@ -3,23 +3,18 @@ import Layout from '../../../layouts/Layout.astro';
 import Header from '../../../components/SiteHeader.astro';
 import Menu from '../../../components/Menu.astro';    
 import Sidebar from '../../../components/Sidebar.astro';
-import PocketBase from 'pocketbase';
-
+import { pb } from '../../../lib/pb.js';
 
 export async function getStaticPaths() {
-  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
   const categories = await pb.collection('categories').getFullList();
- 
+  
   return categories.map((cat) => ({
     params: { id: cat.slug || cat.id },
     props: { category: cat },
   }));
 }
 
-
 const { category } = Astro.props;
-const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-
 
 let lessons: any[] = [];
 try {

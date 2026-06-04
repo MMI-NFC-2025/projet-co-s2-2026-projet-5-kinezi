@@ -91,22 +91,16 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
-  // 1. Initialisation de la connexion à ton backend local
-  const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
-
-  // 2. Récupération des éléments du DOM
   const form = document.getElementById('register-form') as HTMLFormElement;
   const errorDiv = document.getElementById('error-message');
   const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
 
-  // 3. Écoute de la soumission du formulaire
   form?.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page
+    e.preventDefault(); 
     if (!errorDiv || !submitBtn) return;
     
-    // Réinitialisation de l'état
     errorDiv.classList.add('hidden');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Création en cours...';
@@ -114,7 +108,6 @@ import Layout from '../layouts/Layout.astro';
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
-    // Vérification côté client : les mots de passe sont-ils identiques ?
     if (data.password !== data.passwordConfirm) {
       errorDiv.textContent = "Les mots de passe ne correspondent pas.";
       errorDiv.classList.remove('hidden');
@@ -124,31 +117,26 @@ import Layout from '../layouts/Layout.astro';
     }
 
     try {
-      // Étape A : Création de l'utilisateur
       await pb.collection('users').create({
         email: data.email,
         password: data.password,
         passwordConfirm: data.passwordConfirm,
       });
 
-      // Étape B : Connexion automatique (pour générer le token de session)
       await pb.collection('users').authWithPassword(data.email.toString(), data.password.toString());
 
-      // Étape C : Redirection vers le profil ou l'accueil
-      window.location.href = '/profil'; // Modifie selon ton besoin
+      window.location.href = '/profil'; 
       
     } catch (err: any) {
-      console.error("Détails de l'erreur :", err);
+      console.error(err);
       
-      // Gestion des erreurs renvoyées par PocketBase
       if (err.response && err.response.data) {
-        // Extraction des messages d'erreur spécifiques (ex: "Email invalide")
         const details = Object.values(err.response.data)
           .map((e: any) => e.message)
           .join(' | ');
         errorDiv.textContent = details || "Erreur de validation.";
       } else {
-        errorDiv.textContent = "Impossible de joindre le serveur. Ton terminal PocketBase est-il ouvert ?";
+        errorDiv.textContent = "Impossible de joindre le serveur.";
       }
       
       errorDiv.classList.remove('hidden');

@@ -90,11 +90,9 @@ const getNavLinkClass = (path: string) => {
 </style>
 
 <script>
-  import PocketBase from 'pocketbase';
+  import { pb } from '../lib/pb.js';
 
   const initHeader = async () => {
-    const pb = new PocketBase('https://pbopensigne.lilian-maitre.fr');
-    
     const guestZone = document.getElementById('guest-zone');
     const loggedZone = document.getElementById('logged-zone');
     const nameElement = document.getElementById('header-user-name');
@@ -104,7 +102,6 @@ const getNavLinkClass = (path: string) => {
     if (pb.authStore.isValid && pb.authStore.model) {
       const user = pb.authStore.model;
 
-      // Cacher la zone visiteur et afficher la zone connecté
       if (guestZone) {
         guestZone.classList.add('hidden');
         guestZone.classList.remove('flex');
@@ -123,7 +120,6 @@ const getNavLinkClass = (path: string) => {
         avatarSvg.classList.add('hidden');
       }
     } else {
-      // Afficher la zone visiteur et cacher la zone connecté
       if (guestZone) {
         guestZone.classList.remove('hidden');
         guestZone.classList.add('flex');

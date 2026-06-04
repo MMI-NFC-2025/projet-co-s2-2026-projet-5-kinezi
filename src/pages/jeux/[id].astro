@@ -3,11 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/SiteHeader.astro'; 
 import Menu from '../../components/Menu.astro';     
 import Sidebar from '../../components/Sidebar.astro'; 
-import PocketBase from 'pocketbase';
+import { pb } from '../../lib/pb.js';
 
 export async function getStaticPaths() {
   try {
-    const pb = new PocketBase('http://pbopensigne.lilian-maitre.fr');
     const categories = await pb.collection('categories').getFullList();
     
     return categories.map((cat) => ({
@@ -16,7 +15,6 @@ export async function getStaticPaths() {
     }));
   } catch (error) {
     console.error("Erreur lors de la récupération des catégories:", error);
-    // Retourner un tableau vide en cas d'erreur pour permettre au build de continuer
     return [];
   }
 }
