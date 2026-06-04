@@ -86,7 +86,6 @@ try {
       ) : (
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {subLessons.map((lesson, index) => (
-            {/* CORRECTION ICI : Ajout des ombres élégantes (shadow-[0_8px_24px_...]) et du hover violet pour harmoniser avec la bibliothèque */}
             <a href={`/lecon/${lesson.id}`} class="group flex items-center gap-4 bg-white rounded-2xl p-4 shadow-[0_8px_24px_rgba(0,0,0,0.06)] border border-gray-100 hover:shadow-[0_12px_32px_rgba(140,23,248,0.12)] hover:border-[#A898EE]/30 transition-all duration-300 hover:-translate-y-1">
               <div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 font-black text-lg group-hover:bg-[#A898EE]/10 group-hover:text-[#A898EE] transition-colors">
                 {index + 1}
