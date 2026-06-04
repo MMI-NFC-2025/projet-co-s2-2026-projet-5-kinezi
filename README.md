@@ -3,8 +3,8 @@
 
 Éléménts à renseigner pour la soutenance :
 
-- [ ] Nom du projet :
-- [ ] URL de la landing page :
+- [ ] Nom du projet : Opensigne
+- [ ] URL de la landing page : 
 - [ ] URL de l'application finale :
 - [ ] URL de connexion au back office :
 - [ ] Identifiant de connexion au backoffice :
